@@ -115,11 +115,11 @@
       for(var i=0;i<1;i++){ //repeat for tests
         drawTab(tab,document.getElementById("draw"),windowWidth,0);
       }
-      $(".note").hover(()=>{ //on hover
-        console.log($(this).attr("id"));
-      },()=>{ //on leave
-        //$(this).css({fill:"black"});
-      })
     });
+
+    function selectNote(measure,beat,string,x,y){
+      //console.log("clicked in measure "+measure+", beat "+beat+", and string "+string+" at ("+x+","+y+")");
+      drawSelector(document.getElementById("draw"),x,y);
+    }
   </script>
 </html>

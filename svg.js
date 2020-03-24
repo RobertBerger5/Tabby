@@ -1,5 +1,7 @@
 //THIS FILE SERVES TO RENDER THE TAB ONTO THE SVG CANVAS IN THE DOCUMENT
 
+//BIG TODO: make this all be one object that draws on stuff rather than disconnected functions
+
 /*
 pseudocode:
 	for each measure-track pair, draw:
@@ -25,7 +27,9 @@ function drawTab(tab,window,windowWidth,trackN){
 	const stringN=tab.tracks[selectedTrack].stringN; //number of strings in this track
 	//vertical line at the start of a measure
 	drawLine(window,xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
-	for(const measure of tab.measures){ //draw each measure
+	//for(const measure of tab.measures){ //needed measure index for id's
+	for(var iMeasure=0;iMeasure<tab.measures.length;iMeasure++){//draw each measure
+		const measure=tab.measures[iMeasure];
 		const track=measure.tracks[selectedTrack];
 		//if the time signature changed, redraw that now
 		if(measure.timeN!=currTimeN || measure.timeD!=currTimeD){
@@ -42,7 +46,9 @@ function drawTab(tab,window,windowWidth,trackN){
 			currTimeD=measure.timeD;
 			xStart+=noteWidth*(Math.log10(max(currTimeN,currTimeD)));
 		}
-		for(const beat of track){ //draw every beat
+		//for(const beat of track){ //draw every beat
+		for(var iBeat=0;iBeat<track.length;iBeat++){
+			const beat=track[iBeat];
 			//draw strings first
 			for(var i=0;i<stringN;i++){
 				drawLine(window,xStart,yStart,xStart+noteWidth,yStart);
@@ -53,8 +59,8 @@ function drawTab(tab,window,windowWidth,trackN){
 			yStart-=noteHeight*stringN; //reset drawhead to top string
 			for(const note of beat.notes){ //draw all notes
 				//TODO: come up with a way to get unique id's for all of em?
-				id="useless_for_now";//probably just measureNumber+beat+string or something
-				drawFret(window,xStart+noteWidth/2,yStart+note.string*noteHeight+noteHeight/3,note.fret,true,id);//draw fret number on correct string
+				id=iMeasure+","+iBeat+","+note.string;
+				drawFret(window,xStart+noteWidth/2,yStart+note.string*noteHeight+noteHeight/3,note.fret,id);//draw fret number on correct string
 			}
 			//on to the next set of things to draw, increase drawhead
 			xStart+=noteWidth;
@@ -102,6 +108,7 @@ function drawFret(draw,x,y,txt,id=null){
 	text.setAttribute("y",y);
 	text.textContent=txt;
 	text.setAttribute("class","fret");
+	text.setAttribute("onclick","selectNote("+id+","+x+","+y+")"); //seperated by commas, adds them as individual arguments (kinda gross, TODO: probably change)
 	if(id){
 		text.setAttribute("id",id);
 	}
@@ -177,6 +184,20 @@ function drawRhythm(draw,x,y,duration,rest=false){
 		line.setAttribute("stroke-width",stroke);
 		draw.appendChild(line);
 	}
+}
+function drawSelector(draw,x,y){
+	if(document.getElementById("selector")!=null){
+		document.getElementById("selector").remove();
+	}
+	var selector=document.createElementNS("http://www.w3.org/2000/svg","rect");
+	selector.setAttribute("x",x-7);
+	selector.setAttribute("y",y-16);
+	selector.setAttribute("width",20);
+	selector.setAttribute("height",20);
+	selector.setAttribute("stroke","red");
+	selector.setAttribute("stroke-width",2);
+	selector.setAttribute("fill-opacity","0");
+	draw.appendChild(selector);
 }
 
 //lil helper function for my helper functions
