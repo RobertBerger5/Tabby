@@ -1,0 +1,284 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+      .note{
+        fill:black;
+        font: bold 15px sans-serif;
+      }
+    </style>
+  </head>
+  <svg id="draw" height="10000">
+  </svg>
+  <script>
+    //hardcoded crazy train, for editing fuckery
+    tab={
+      info:{
+        title: "crazy train",
+        author: "andy roads",
+        album: "blizzard of Oz"
+      },
+      tracks:[
+        {
+          name: "andy on lead",
+          voice: "guitar_distort",
+          stringN: 6,
+          st0: "E4",
+          st1: "B4",
+          st2: "G3",
+          st3: "D3",
+          st4: "A3",
+          st5: "E2"
+        }
+      ],
+      measures:[ //measure info, then note info for each of the tracks
+        {///measure 1
+          timeN: 4,
+          timeD: 4,
+          tempo: 160,
+          tracks: [ //list of tracks
+            [//list of beats in track 0
+              {
+                duration: 0, //0 corresponds to 8th notes
+                notes: [//notes
+                  {
+                    string: 5,
+                    fret: 2
+                  }
+                ]
+              },
+              {duration: 0, notes: [{string: 5, fret: 2}]},
+              {duration: 0, notes: [{string: 4, fret: 4}]},
+              {duration: 0, notes: [{string: 5, fret: 2}]},
+              {duration: 0, notes: [{string: 4, fret: 5}]},
+              {duration: 0, notes: [{string: 5, fret: 2}]},
+              {duration: 0, notes: [{string: 4, fret: 4}]},
+              {duration: 0, notes: [{string: 5, fret: 2}]},
+            ]
+          ]
+        },
+        {//measure 2
+          timeN: 4,timeD: 4,tempo: 160,
+          tracks: [
+            [//beats in track 1
+              {duration: 0, notes: [{string: 4, fret: 2}]},
+              {duration: 0, notes: [{string: 5, fret: 5}]},
+              {duration: 0, notes: [{string: 5, fret: 4}]},
+              {duration: 0, notes: [{string: 5, fret: 5}]},
+              {duration: 0, notes: [{string: 4, fret: 2}]},
+              {duration: 0, notes: [{string: 5, fret: 5}]},
+              {duration: 0, notes: [{string: 5, fret: 4}]},
+              {duration: 0, notes: [{string: 5, fret: 0}]},
+            ]
+          ]
+        },
+        {timeN:127,timeD:64,tempo:100,
+          tracks: [[
+            {duration: -3, notes:[{string:5,fret:0}]},//64th
+            {duration: -2, notes:[{string:5,fret:0}]},//32nd
+            {duration: -1, notes:[{string:5,fret:0}]},//16th
+            {duration: 0, notes:[{string:5,fret:0}]}, //8th
+            {duration: 1, notes:[{string:5,fret:0}]}, //quarter
+            {duration: 2, notes:[{string:5,fret:0}]}, //half
+            {duration: 3, notes:[{string:5,fret:0}]}  //whole
+          ]]
+        },//another one bites the dust, half 1
+        {timeN:4,timeD:4,tempo:120,
+          tracks:[[
+            {duration: 0, notes:[{string:4,fret:7}]},
+            {duration: 0, notes:[]}, //rest for an 8th note
+            {duration: 0, notes:[{string:4,fret:7}]},
+            {duration: 0, notes:[]}, //rest for an 8th note
+            {duration: 0, notes:[{string:4,fret:7}]},
+            {duration: 1, notes:[]}, //quarter rest
+            {duration: -1,notes:[]}, //16th rest
+            {duration: -1,notes:[{string:4,fret:7}]} //quick grace note
+          ]]
+        },//second half of another one bites the dust
+        {timeN:4,timeD:4,tempo:120,
+          tracks:[[ //technically not exactly how this measure goes, but here's the simplified version
+            {duration: 0, notes:[{string:4,fret:7}]},
+            {duration: 0, notes:[{string:4,fret:7}]},
+            {duration: 0, notes:[{string:3,fret:5}]},
+            {duration: 0, notes:[{string:4,fret:7}]},
+            {duration: 0, notes:[{string:3,fret:7}]},
+            {duration: 1, notes:[]}, //dotted quarter rest
+            {duration: 0, notes:[]}
+          ]]
+        }
+      ]
+    }
+
+    function drawLine(x1,y1,x2,y2){
+      var line=document.createElementNS("http://www.w3.org/2000/svg","line");
+      line.setAttribute("x1",x1);
+      line.setAttribute("y1",y1);
+      line.setAttribute("x2",x2);
+      line.setAttribute("y2",y2);
+      line.setAttribute("style","stroke:rgb(0,0,0);stroke-width:2");
+      document.getElementById("draw").appendChild(line);
+    }
+    function drawFret(x,y,txt,id=null){
+      const charWidth=7;
+      const charHeight=15;
+        var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+        rect.setAttribute("x",x);
+        rect.setAttribute("y",y-charHeight);
+        if(txt>0){
+          //white rectangle should be the width of all chars in the text
+          rect.setAttribute("width",charWidth*(1+Math.log10(txt)));
+        }else{
+          rect.setAttribute("width",charWidth);
+        }
+        rect.setAttribute("height",charHeight);
+        rect.setAttribute("fill","white");
+        document.getElementById("draw").appendChild(rect);
+      
+      text=document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("x",x);
+      text.setAttribute("y",y);
+      text.textContent=txt;
+      text.setAttribute("class","note");
+      if(id){
+        text.setAttribute("id",id);
+      }
+      document.getElementById("draw").appendChild(text);
+    }
+    function drawTimeSignature(x,y,height,num,denom){
+      text=document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("x",x);
+      text.setAttribute("y",y-10);
+      text.textContent=num;
+      text.setAttribute("style","font-size: bold 400px serif");//TODO, also draw denominator
+      document.getElementById("draw").appendChild(text);
+    }
+    function drawRhythm(x,y,duration,rest=false){
+      //TODO: draw rests differently
+      const rx=2.5;
+      const ry=1.5;
+      const thicc=1.5;
+      const topOfLine=thicc*10;
+      var note=document.createElementNS("http://www.w3.org/2000/svg","ellipse");
+      note.setAttribute("cx",x);
+      note.setAttribute("cy",y);
+      note.setAttribute("rx",rx);
+      note.setAttribute("ry",ry);
+      note.setAttribute("stroke-width",thicc);
+      note.setAttribute("stroke","black");
+      if(duration>1){//fill halves and wholes with white
+        note.setAttribute("fill","white");
+        if(duration==3){//whole notes don't need more
+          document.getElementById("draw").appendChild(note);
+          return;
+        }
+      }
+      //vertical line on everything but whole notes
+      var line=document.createElementNS("http://www.w3.org/2000/svg","line");
+      line.setAttribute("x1",x+rx);
+      line.setAttribute("y1",y);
+      line.setAttribute("x2",x+rx);
+      line.setAttribute("y2",y-topOfLine);
+      line.setAttribute("stroke-width",thicc);
+      line.setAttribute("stroke","black");
+      document.getElementById("draw").appendChild(line);
+      document.getElementById("draw").appendChild(note);
+      for(var i=duration;i<=0;i++){//lazy coding, wanna add lines to non-quarter notes
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",x+rx);
+        line.setAttribute("y1",y-topOfLine+i*3*-1);
+        line.setAttribute("x2",x+rx+rx*2);
+        line.setAttribute("y2",ry+y-topOfLine+i*3*-1);
+        //squiggles were annoying to look at, and so was the code for them.
+        //line=document.createElementNS("http://www.w3.org/2000/svg","path");
+        //line.setAttribute("d","m"+(x+rx)+","+(y-topOfLine+i*ry*-1.25)+"c2,-2 4,2 6,0 l0,1 c-2,2 -4,-2 -6,0 l0,-1z");
+        line.setAttribute("stroke","black");
+        line.setAttribute("stroke-width",thicc);
+        document.getElementById("draw").appendChild(line);
+      }
+    }
+  </script>
+  <script>
+    /*
+    pseudocode:
+      for each measure-track pair, draw:
+        for each beat (in selected track??):
+          draw string lines (same width for all)
+          draw fret number on correct string (white background?)
+          draw rhythm note below
+          TODO later: draw effects on notes
+        draw end of measure
+    */
+    var windowWidth;
+
+    const selectedTrack=0;
+    const noteWidth=25;
+    const noteHeight=15;
+    //where the current drawhead is at
+    var xStart=0;
+    var yStart=20;
+    //so we know to redraw the tempo or time signature
+    var currTimeN=-1;
+    var currTimeD=-1;
+    var currTempo=-1;
+    function drawTab(){
+      const stringN=tab.tracks[selectedTrack].stringN;
+      drawLine(xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
+      for(const measure of tab.measures){
+        const track=measure.tracks[selectedTrack];
+        //TODO: if the time signature changed, redraw that here.
+        if(measure.timeN!=currTimeN || measure.timeD!=currTimeD){
+          //draw strings behind it
+          for(var i=0;i<stringN;i++){//draw strings
+            drawLine(xStart,yStart,xStart+noteWidth,yStart);
+            yStart+=noteHeight;
+          }
+          xStart+=noteWidth;
+          yStart-=noteHeight*stringN;
+          drawTimeSignature(xStart,yStart+noteHeight*(stringN/2),noteHeight+stringN,measure.timeN,measure.timeD);
+          currTimeN=measure.timeN;
+          currTimeD=measure.timeD;
+        }
+        for(const beat of track){
+          //draw strings
+          for(var i=0;i<stringN;i++){
+            drawLine(xStart,yStart,xStart+noteWidth,yStart);
+            yStart+=noteHeight;
+          }
+          //draw rhythm (last part signifies if it's a rest or not)
+          drawRhythm(xStart+noteWidth*2/3,yStart+10,beat.duration,beat.notes.length==0);
+          yStart-=noteHeight*stringN; //reset to top string
+          //draw notes
+          for(const note of beat.notes){
+            //TODO: come up with a way to get unique id's for all of em?
+            id="ass";//probably just measureNumber+beat+note in one string. don't worry about measures being deleted or whatever, these are all reassigned every single time the user changes anything.
+            //every. single. time. the user changes...anything...
+            //might be a more efficient way of going about this?
+            drawFret(xStart+noteWidth/2,yStart+note.string*noteHeight+noteHeight/3,note.fret,true,id);//draw fret number on correct string
+          }
+          //on to the next set of notes to draw
+          xStart+=noteWidth;
+        }
+        //new measure line
+        drawLine(xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
+        //carriage return
+        if(xStart>=window.innerWidth-300){//TODO: check if next measure would run over or not
+            xStart=0;
+            yStart+=noteHeight*stringN*2;
+            drawLine(xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
+          }
+      }
+    }
+    $(function(){
+      windowWidth=document.body.clientWidth;
+      $("#draw").width(windowWidth);
+      for(var i=0;i<1;i++){ //repeat for tests
+        drawTab();
+      }
+      $(".note").hover(()=>{ //on hover
+        console.log($(this).attr("id"));
+      },()=>{ //on leave
+        //$(this).css({fill:"black"});
+      })
+    });
+  </script>
+</html>
