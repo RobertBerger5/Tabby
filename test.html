@@ -113,7 +113,7 @@
       var windowWidth=document.body.clientWidth;
       $("#draw").width(windowWidth);
       for(var i=0;i<1;i++){ //repeat for tests
-        drawTab(document.getElementById("draw"),windowWidth,0);
+        drawTab(tab,document.getElementById("draw"),windowWidth,0);
       }
       $(".note").hover(()=>{ //on hover
         console.log($(this).attr("id"));
