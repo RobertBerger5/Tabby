@@ -112,8 +112,9 @@
     $(function(){
       var windowWidth=document.body.clientWidth;
       $("#draw").width(windowWidth);
+      var drawer=new Drawer(tab,document.getElementById("draw",windowWidth));
       for(var i=0;i<1;i++){ //repeat for tests
-        drawTab(tab,document.getElementById("draw"),windowWidth,0);
+        drawer.drawTab(0);
       }
     });
 

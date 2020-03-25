@@ -1,7 +1,12 @@
 //THIS FILE SERVES TO RENDER THE TAB ONTO THE SVG CANVAS IN THE DOCUMENT
 
 //BIG TODO: make this all be one object that draws on stuff rather than disconnected functions
-
+class Drawer{
+	constructor(tab,window,windowWidth){
+		this.tab=tab; //copy by reference
+		this.window=window;
+		this.windowWidth=windowWidth;
+	}
 /*
 pseudocode:
 	for each measure-track pair, draw:
@@ -12,7 +17,7 @@ pseudocode:
 		TODO later: draw effects on notes
 	draw end of measure
 */
-function drawTab(tab,window,windowWidth,trackN){
+	drawTab(trackN){
 	//some constant vars to keep everything in line
 	const selectedTrack=trackN;
 	const noteWidth=30;
@@ -24,23 +29,23 @@ function drawTab(tab,window,windowWidth,trackN){
 	//where the current drawhead is
 	var xStart=0;
 	var yStart=20;
-	const stringN=tab.tracks[selectedTrack].stringN; //number of strings in this track
+	const stringN=this.tab.tracks[selectedTrack].stringN; //number of strings in this track
 	//vertical line at the start of a measure
-	drawLine(window,xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
-	//for(const measure of tab.measures){ //needed measure index for id's
-	for(var iMeasure=0;iMeasure<tab.measures.length;iMeasure++){//draw each measure
-		const measure=tab.measures[iMeasure];
+	this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
+	//for(const measure of this.tab.measures){ //needed measure index for id's
+	for(var iMeasure=0;iMeasure<this.tab.measures.length;iMeasure++){//draw each measure
+		const measure=this.tab.measures[iMeasure];
 		const track=measure.tracks[selectedTrack];
 		//if the time signature changed, redraw that now
 		if(measure.timeN!=currTimeN || measure.timeD!=currTimeD){
 			//draw strings behind it
 			for(var i=0;i<stringN;i++){//draw strings
 				//line should be exactly as long as the time signature, meaning we have to look at how many characters are in it (which is a number in base 10, so we use log10)
-				drawLine(window,xStart,yStart,xStart+noteWidth*(1+Math.log10(max(measure.timeN,measure.timeD))),yStart);
+				this.drawLine(this.window,xStart,yStart,xStart+noteWidth*(1+Math.log10(max(measure.timeN,measure.timeD))),yStart);
 				yStart+=noteHeight;
 			}
 			yStart-=noteHeight*stringN;
-			drawTimeSignature(window,xStart,yStart+noteHeight*(stringN/2),noteHeight*stringN,measure.timeN,measure.timeD);
+			this.drawTimeSignature(this.window,xStart,yStart+noteHeight*(stringN/2),noteHeight*stringN,measure.timeN,measure.timeD);
 			//update our variables, and the 
 			currTimeN=measure.timeN;
 			currTimeD=measure.timeD;
@@ -51,33 +56,33 @@ function drawTab(tab,window,windowWidth,trackN){
 			const beat=track[iBeat];
 			//draw strings first
 			for(var i=0;i<stringN;i++){
-				drawLine(window,xStart,yStart,xStart+noteWidth,yStart);
+				this.drawLine(this.window,xStart,yStart,xStart+noteWidth,yStart);
 				yStart+=noteHeight;
 			}
 			//draw rhythm underneath (last part signifies if it's a rest or not)
-			drawRhythm(window,xStart+noteWidth*2/3,yStart+10,beat.duration,beat.notes.length==0);
+			this.drawRhythm(this.window,xStart+noteWidth*2/3,yStart+10,beat.duration,beat.notes.length==0);
 			yStart-=noteHeight*stringN; //reset drawhead to top string
 			for(const note of beat.notes){ //draw all notes
 				//TODO: come up with a way to get unique id's for all of em?
-				id=iMeasure+","+iBeat+","+note.string;
-				drawFret(window,xStart+noteWidth/2,yStart+note.string*noteHeight+noteHeight/3,note.fret,id);//draw fret number on correct string
+				var id=iMeasure+","+iBeat+","+note.string;
+				this.drawFret(this.window,xStart+noteWidth/2,yStart+note.string*noteHeight+noteHeight/3,note.fret,id);//draw fret number on correct string
 			}
 			//on to the next set of things to draw, increase drawhead
 			xStart+=noteWidth;
 		}
 		//new measure line
-		drawLine(window,xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
+		this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
 		//carriage return if it's getting too far to the right
-		if(xStart>=windowWidth-300){//TODO: check if next measure would run over or not
+		if(xStart>=this.windowWidth-300){//TODO: check if next measure would run over or not
 			xStart=0;
 			yStart+=noteHeight*stringN*2;
-			drawLine(window,xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
+			this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*noteHeight);
 		}
 	}
 }
 
 
-function drawLine(draw,x1,y1,x2,y2){
+drawLine(draw,x1,y1,x2,y2){
 	var line=document.createElementNS("http://www.w3.org/2000/svg","line");
 	line.setAttribute("x1",x1);
 	line.setAttribute("y1",y1);
@@ -86,7 +91,7 @@ function drawLine(draw,x1,y1,x2,y2){
 	line.setAttribute("style","stroke:rgb(0,0,0);stroke-width:2");
 	draw.appendChild(line);
 }
-function drawFret(draw,x,y,txt,id=null){
+drawFret(draw,x,y,txt,id=null){
 	const charWidth=7;
 	const charHeight=15; //align with what's in tab.css
 	//white rectangle behind it to cover the strings
@@ -114,7 +119,7 @@ function drawFret(draw,x,y,txt,id=null){
 	}
 	draw.appendChild(text);
 }
-function drawTimeSignature(draw,x,y,height,num,denom){
+drawTimeSignature(draw,x,y,height,num,denom){
 	x+=1; //give it a little space
 	const charWidth=150;
 	const charHeight=35;
@@ -141,7 +146,7 @@ function drawTimeSignature(draw,x,y,height,num,denom){
 	text.setAttribute("class","timeS");//TODO, also draw denominator
 	draw.appendChild(text);
 }
-function drawRhythm(draw,x,y,duration,rest=false){
+drawRhythm(draw,x,y,duration,rest=false){
 	//TODO: draw rests differently
 	const rx=2.5;
 	const ry=1.5;
@@ -185,7 +190,7 @@ function drawRhythm(draw,x,y,duration,rest=false){
 		draw.appendChild(line);
 	}
 }
-function drawSelector(draw,x,y){
+drawSelector(draw,x,y){
 	if(document.getElementById("selector")!=null){
 		document.getElementById("selector").remove();
 	}
@@ -198,6 +203,7 @@ function drawSelector(draw,x,y){
 	selector.setAttribute("stroke-width",2);
 	selector.setAttribute("fill-opacity","0");
 	draw.appendChild(selector);
+}
 }
 
 //lil helper function for my helper functions
