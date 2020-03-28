@@ -3,6 +3,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="Drawer.js"></script><!--helper class for drawing-->
     <script src="Editor.js"></script>
+    <script src="Player.js"></script>
     <link rel="stylesheet" href="tab.css" />
   </head>
   <svg id="draw" height="10000">
@@ -109,6 +110,7 @@
   <script>
     var drawer; //class for working with svg elements
     var editor; //class for handling user input and affecting the "tab" object
+    var player; //class for playing the notes back to the user, may be deleted in favor of rendering a .mp3 file on the server for potential performance and parallelism issues
 
     var inDraw=false; //boolean for if the mouse is in the <svg></svg> area
 
@@ -117,6 +119,7 @@
       $("#draw").width(windowWidth);
       drawer=new Drawer(tab,document.getElementById("draw"),windowWidth);
       editor=new Editor(tab,0);
+      player=new Player(tab);
       drawer.drawTab(0);
     });
 

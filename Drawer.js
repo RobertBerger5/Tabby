@@ -53,6 +53,7 @@ class Drawer{
 			//if the tempo changed, or the note that gets the beat changed, redraw that here
 			if(measure.tempo!=this.currTempo || measure.timeD!=this.currTimeD){
 				this.drawRhythm(this.window,xStart+10,yStart-10,measure.timeD,false);
+				this.drawText(this.window,xStart+20,yStart-10,"= "+measure.tempo);
 				this.currTempo=measure.tempo;
 				this.currTimeD=measure.timeD;
 			}
@@ -117,16 +118,25 @@ class Drawer{
 		draw.appendChild(line);
 	}
 
-	drawFret(draw,x,y,txt){
+	drawText(draw,x,y,txt){
+		var text=document.createElementNS("http://www.w3.org/2000/svg","text");
+		text.setAttribute("x",x);
+		text.setAttribute("y",y);
+		text.textContent=txt;
+		text.setAttribute("class","text");
+		draw.appendChild(text);
+	}
+
+	drawFret(draw,x,y,fret){
 		const charWidth=7;
 		const charHeight=15; //align with what's in tab.css
 		//white rectangle behind it to cover the strings
 		var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
 		rect.setAttribute("x",x);
 		rect.setAttribute("y",y-charHeight);
-		if(txt>0){
+		if(fret>0){
 			//white rectangle should be the width of all chars in the text
-			rect.setAttribute("width",charWidth*(1+Math.log10(txt)));
+			rect.setAttribute("width",charWidth*(1+Math.log10(fret)));
 		}else{
 			rect.setAttribute("width",charWidth);
 		}
@@ -137,9 +147,8 @@ class Drawer{
 		var text=document.createElementNS("http://www.w3.org/2000/svg","text");
 		text.setAttribute("x",x);
 		text.setAttribute("y",y);
-		text.textContent=txt;
+		text.textContent=fret;
 		text.setAttribute("class","fret");
-		//text.setAttribute("onclick","selectNote("+id+","+x+","+y+")");
 		draw.appendChild(text);
 	}
 
