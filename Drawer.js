@@ -41,7 +41,7 @@ class Drawer{
 		var currTempo=-1;
 		//where the current drawhead is
 		var xStart=0;
-		var yStart=20;
+		var yStart=30;
 		const stringN=this.tab.tracks[selectedTrack].stringN; //number of strings in this track
 		//vertical line at the start of a measure
 		this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*this.noteHeight);
@@ -183,9 +183,9 @@ class Drawer{
 		note.setAttribute("ry",ry);
 		note.setAttribute("stroke-width",stroke);
 		note.setAttribute("stroke","black");
-		if(duration>1){//fill halves and wholes with white
+		if(duration==1 || duration ==2){//fill halves and wholes with white
 			note.setAttribute("fill","white");
-			if(duration==3){//whole notes don't need more
+			if(duration==1){//whole notes don't need more
 				draw.appendChild(note);
 				return;
 			}
@@ -200,12 +200,13 @@ class Drawer{
 		line.setAttribute("stroke","black");
 		draw.appendChild(line);
 		draw.appendChild(note);
-		for(var i=duration;i<=0;i++){//lazy coding, wanna add lines to non-quarter notes
+		//for(var i=duration;i<=0;i++){//lazy coding, wanna add lines to non-quarter notes
+		for(var i=Math.log2(duration)-3;i>=0;i--){
 			line=document.createElementNS("http://www.w3.org/2000/svg","line");
 			line.setAttribute("x1",x+rx);
-			line.setAttribute("y1",y-topOfLine+i*3*-1);
+			line.setAttribute("y1",y-topOfLine+i*3);
 			line.setAttribute("x2",x+rx+rx*2);
-			line.setAttribute("y2",ry+y-topOfLine+i*3*-1);
+			line.setAttribute("y2",ry+y-topOfLine+i*3);
 			//squiggles were annoying to look at, and so was the code for them.
 			//line=document.createElementNS("http://www.w3.org/2000/svg","path");
 			//line.setAttribute("d","m"+(x+rx)+","+(y-topOfLine+i*ry*-1.25)+"c2,-2 4,2 6,0 l0,1 c-2,2 -4,-2 -6,0 l0,-1z");
