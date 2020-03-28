@@ -1,7 +1,8 @@
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="svg.js"></script><!--helper functions for drawing-->
+    <script src="Drawer.js"></script><!--helper class for drawing-->
+    <script src="Editor.js"></script>
     <style>
       
     </style>
@@ -109,18 +110,44 @@
     }
   </script>
   <script>
+    var drawer; //class for working with svg elements
+    var editor; //class for handling user input and affecting the "tab" object
+
+    var inDraw=false; //boolean for if the mouse is in the <svg></svg> area
+
     $(function(){
       var windowWidth=document.body.clientWidth;
       $("#draw").width(windowWidth);
-      var drawer=new Drawer(tab,document.getElementById("draw",windowWidth));
-      for(var i=0;i<1;i++){ //repeat for tests
-        drawer.drawTab(0);
-      }
+      drawer=new Drawer(tab,document.getElementById("draw"),windowWidth);
+      editor=new Editor(tab,0);
+      drawer.drawTab(0);
     });
 
-    function selectNote(measure,beat,string,x,y){
-      //console.log("clicked in measure "+measure+", beat "+beat+", and string "+string+" at ("+x+","+y+")");
-      drawSelector(document.getElementById("draw"),x,y);
+    //when a fret is dynamically added, it has a call to this function with the correct arguments
+    //structure of the "note" variable: [measure,beat,string]
+    /*function selectNote(x,y,note=null){
+      //console.log("clicked "+note+" at ("+x+","+y+")");
+      drawer.drawSelector(document.getElementById("draw"),x,y);
+      editor.select(note);
+    }*/
+    function selectNote(id){
+      //console.log(id);
+      drawer.drawSelector(id);
+      editor.select(id);
     }
+
+    $("#draw").mouseenter(()=>{inDraw=true});
+    $("#draw").mouseleave(()=>{inDraw=false});
+    $("body").keydown((event)=>{
+      if(inDraw){ //don't use the editor if they pressed a key outside the editor
+        if([32,37,38,39,40].indexOf(event.keyCode)>-1){
+          //prevent arrow keys and space from scrolling the page
+          event.preventDefault();
+        }
+        editor.handleKey(event.which);
+        drawer.drawTab(0);
+        drawer.drawSelector(editor.selected);
+      }
+    });
   </script>
 </html>
