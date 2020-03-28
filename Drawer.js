@@ -49,6 +49,13 @@ class Drawer{
 		for(var iMeasure=0;iMeasure<this.tab.measures.length;iMeasure++){//draw each measure
 			const measure=this.tab.measures[iMeasure];
 			const track=measure.tracks[selectedTrack];
+
+			//if the tempo changed, or the note that gets the beat changed, redraw that here
+			if(measure.tempo!=this.currTempo || measure.timeD!=this.currTimeD){
+				this.drawRhythm(this.window,xStart+10,yStart-10,measure.timeD,false);
+				this.currTempo=measure.tempo;
+				this.currTimeD=measure.timeD;
+			}
 			//if the time signature changed, redraw that now
 			if(measure.timeN!=currTimeN || measure.timeD!=currTimeD){
 				//draw strings behind it
