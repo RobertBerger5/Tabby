@@ -12,6 +12,10 @@ class Editor{
 		//console.log("now selected "+this.selected);
 		//console.log(this.getNote());
 	}
+	changeTrack(track){
+		this.track=track;
+		this.selected=null;
+	}
 	//makes things more readable
 	measure(){return ((this.selected!=null)?this.selected[0]:null);}
 	beat(){return ((this.selected!=null)?this.selected[1]:null);}
@@ -104,7 +108,7 @@ class Editor{
 			}
 
 		}else{
-			console.log("no defined behavior for key "+key);
+			console.log("Editor: no defined behavior for key "+key);
 		}
 	}
 }

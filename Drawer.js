@@ -243,7 +243,6 @@ class Drawer{
 			this.selectionDummy.setAttribute("stroke-width",0);
 		}
 		if(id!=null){
-			console.log("drawing");
 			//kinda gross way of going about it, but it works
 			this.selectionDummy=document.getElementById("["+id.toString()+"]");
 			this.selectionDummy.setAttribute("stroke-width",2);
