@@ -101,7 +101,7 @@ class Editor{
 					}
 					break;
 				case 40: //down
-					if(this.string()<this.tab.tracks[this.track].stringN-1){
+					if(this.string()<this.tab.tracks[this.track].strings.length-1){
 						this.selected[2]++;
 					}
 					break;

@@ -34,22 +34,54 @@
 					{
 						name: "andy on lead",
 						voice: "guitar_distort",
-						stringN: 6, //TODO: maybe just change it to a list/array?
-						st0: "E4",
-						st1: "B4",
-						st2: "G3",
-						st3: "D3",
-						st4: "A3",
-						st5: "E2"
+						strings:[
+							{
+								note: 'E',
+								octave: 4
+							},
+							{
+								note: 'B',
+								octave: 4
+							},
+							{
+								note: 'G',
+								octave: 3
+							},
+							{
+								note: 'D',
+								octave: 3
+							},
+							{
+								note: 'A',
+								octave: 3
+							},
+							{
+								note: 'E',
+								octave: 2
+							}
+						]
 					},
 					{
 						name: "bass guy",
 						voice: "bass_picked",
-						stringN: 4,
-						st0: "G2",
-						st1: "D2",
-						st2: "A2",
-						st3: "E1"
+						strings:[
+							{
+								note: 'G',
+								octave: 2
+							},
+							{
+								note: 'D',
+								octave: 2
+							},
+							{
+								note: 'A',
+								octave: 2
+							},
+							{
+								note: 'E',
+								octave: 1
+							}
+						]
 					}
 				],
 				measures:[ //measure info, then note info for each of the tracks
@@ -179,6 +211,7 @@
 				var windowWidth=document.body.clientWidth;
 				$("#draw").width(windowWidth);
 				tab=loadTab();
+				window.AudioContext=window.AudioContext || window.webkitAudioContext; //play in Firefox
 				drawer=new Drawer(tab,document.getElementById("draw"),windowWidth);
 				editor=new Editor(tab,currTrack);
 				player=new Player(tab);

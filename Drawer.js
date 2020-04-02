@@ -42,7 +42,7 @@ class Drawer{
 		//where the current drawhead is
 		var xStart=0;
 		var yStart=30;
-		const stringN=this.tab.tracks[selectedTrack].stringN; //number of strings in this track
+		const stringN=this.tab.tracks[selectedTrack].strings.length; //number of strings in this track
 		//vertical line at the start of a measure
 		this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*this.noteHeight);
 		//for(const measure of this.tab.measures){ //needed measure index for id's
