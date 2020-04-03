@@ -62,6 +62,7 @@ class Editor{
 		//console.log("Editor will handle keypress "+key);
 		if(key>=48 && key<=57){
 			//number key pressed
+			//TODO: if 1 or 2, maybe wait .1 seconds for another number?? currently can't have any frets beyond the 9th because no double digits
 			this.changeFret(key-48);
 		}else if(key==8){
 			this.deleteSelected();
@@ -69,7 +70,6 @@ class Editor{
 			if(this.selected==null){
 				return;
 			}
-			//TODO: update selected box somehow
 			switch(key){
 				case 37: //left
 					if(this.beat()>0){

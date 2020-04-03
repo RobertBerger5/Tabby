@@ -41,7 +41,7 @@
 							},
 							{
 								note: 'B',
-								octave: 4
+								octave: 3
 							},
 							{
 								note: 'G',
@@ -53,7 +53,7 @@
 							},
 							{
 								note: 'A',
-								octave: 3
+								octave: 2
 							},
 							{
 								note: 'E',
@@ -75,7 +75,7 @@
 							},
 							{
 								note: 'A',
-								octave: 2
+								octave: 1
 							},
 							{
 								note: 'E',
@@ -91,27 +91,23 @@
 						tempo: 160,
 						tracks: [ //list of tracks
 							[//list of beats in track 0
-								{
-									duration: 8, //an 8th note
-									notes: [
-										{
-											string: 5,
-											fret: 2
-										}
-									]
-								},
-								{duration: 8, notes: [{string: 5, fret: 2}]},
-								{duration: 8, notes: [{string: 4, fret: 4}]},
-								{duration: 8, notes: [{string: 5, fret: 2}]},
-								{duration: 8, notes: [{string: 4, fret: 5}]},
-								{duration: 8, notes: [{string: 5, fret: 2}]},
-								{duration: 8, notes: [{string: 4, fret: 4}]},
-								{duration: 8, notes: [{string: 5, fret: 2}]},
+								{duration: 8, notes: [{string:5, fret:2}]},
+								{duration: 8, notes: [{string:5, fret:2}]},
+								{duration: 8, notes: [{string:4, fret:4}]},
+								{duration: 8, notes: [{string:5, fret:2}]},
+								{duration: 8, notes: [{string:4, fret:5}]},
+								{duration: 8, notes: [{string:5, fret:2}]},
+								{duration: 8, notes: [{string:4, fret:4}]},
+								{duration: 8, notes: [{string:5, fret:2}]},
 							],[//notes for track 2 (bass)
-								{duration: 8,notes:[{string:3,fret:2}]},
-								{duration: 8,notes:[{string:3,fret:2}]},
-								{duration: 2,notes:[]}, //these two are
-								{duration: 4,notes:[]}, //a dotted half rest
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
 							]
 						]
 					},
@@ -119,22 +115,24 @@
 						timeN: 4,timeD: 4,tempo: 160,
 						tracks: [
 							[//beats in track 1
-								{duration: 8, notes: [{string: 4, fret: 2}]},
-								{duration: 8, notes: [{string: 5, fret: 5}]},
-								{duration: 8, notes: [{string: 5, fret: 4}]},
-								{duration: 8, notes: [{string: 5, fret: 5}]},
-								{duration: 8, notes: [{string: 4, fret: 2}]},
-								{duration: 8, notes: [{string: 5, fret: 5}]},
-								{duration: 8, notes: [{string: 5, fret: 4}]},
-								{duration: 8, notes: [{string: 5, fret: 0}]},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
+								{duration: 8, notes: []},
 							],
 							[
-								{duration: 8,notes:[{string:2,fret:5}]},
-								{duration: 8,notes:[{string:2,fret:5}]},
-								{duration: 4,notes:[]},
-								{duration: 8,notes:[{string:3,fret:0}]},
-								{duration: 8,notes:[{string:3,fret:0}]},
-								{duration: 4,notes:[]},
+							{duration: 8, notes: []},
+							{duration: 8, notes: []},
+							{duration: 8, notes: []},
+							{duration: 8, notes: []},
+							{duration: 8, notes: []},
+							{duration: 8, notes: []},
+							{duration: 8, notes: []},
+							{duration: 8, notes: []},
 							]
 						]
 					},
@@ -149,7 +147,7 @@
 							{duration: 1, notes:[{string:5,fret:0}]}  //whole
 						]]
 					},*/
-					{timeN:4,timeD:4,tempo:120, //another one bites the dust, half 1
+					/*{timeN:4,timeD:4,tempo:120, //another one bites the dust, half 1
 						tracks:[
 						[
 								{duration: 8, notes:[{string:4,fret:7}]},
@@ -160,7 +158,7 @@
 								{duration: 4, notes:[]}, //quarter rest
 								{duration: 16,notes:[]}, //16th rest
 								{duration: 16,notes:[{string:4,fret:7}]} //quick grace note
-							],
+							]/*,
 							[
 								{duration: 8, notes:[{string:2,fret:7}]},
 								{duration: 8, notes:[]}, //rest for an 8th note
@@ -170,7 +168,7 @@
 								{duration: 4, notes:[]}, //quarter rest
 								{duration: 16,notes:[]}, //16th rest
 								{duration: 16,notes:[{string:2,fret:7}]} //quick grace note
-							]
+							]*
 						]
 					},//second half of another one bites the dust
 					{timeN:4,timeD:4,tempo:120,
@@ -183,7 +181,7 @@
 								{duration: 8, notes:[{string:3,fret:7}]},
 								{duration: 4, notes:[]}, //dotted quarter rest
 								{duration: 8, notes:[]}
-							],
+							]/*,
 							[ //technically not exactly how this measure goes, but here's the simplified version
 								{duration: 8, notes:[{string:2,fret:7}]},
 								{duration: 8, notes:[{string:2,fret:7}]},
@@ -192,9 +190,9 @@
 								{duration: 8, notes:[{string:1,fret:7}]},
 								{duration: 4, notes:[]}, //dotted quarter rest
 								{duration: 8, notes:[]}
-							]
+							]*
 						]
-					}
+					}*/
 				]
 			}
 		</script>
@@ -241,7 +239,11 @@
 						event.preventDefault();
 					}
 					if(event.keyCode==32){
-						player.play();
+						if(!player.playing){
+							player.play(editor.measure());
+						}else{
+							player.playing=false; //flag var to false player will notice before playing next measure
+						}
 					}
 					editor.handleKey(event.which);
 					drawer.drawTab(currTrack);
@@ -249,4 +251,5 @@
 				}
 			});
 		</script>
+	</body>
 </html>

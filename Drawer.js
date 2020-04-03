@@ -51,11 +51,11 @@ class Drawer{
 			const track=measure.tracks[selectedTrack];
 
 			//if the tempo changed, or the note that gets the beat changed, redraw that here
-			if(measure.tempo!=this.currTempo || measure.timeD!=this.currTimeD){
+			if(measure.tempo!=currTempo || measure.timeD!=currTimeD){
 				this.drawRhythm(this.window,xStart+10,yStart-10,measure.timeD,false);
 				this.drawText(this.window,xStart+20,yStart-10,"= "+measure.tempo);
-				this.currTempo=measure.tempo;
-				this.currTimeD=measure.timeD;
+				currTempo=measure.tempo;
+				currTimeD=measure.timeD;
 			}
 			//if the time signature changed, redraw that now
 			if(measure.timeN!=currTimeN || measure.timeD!=currTimeD){
