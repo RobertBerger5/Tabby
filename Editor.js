@@ -111,4 +111,72 @@ class Editor{
 			console.log("Editor: no defined behavior for key "+key);
 		}
 	}
+
+	clearTrackMeasure(measure,trackN){
+		if(measure==null){
+			alert("no measure selected");
+			return;
+		}
+		//assert: they have a track selected
+		measure.tracks[trackN]=[];
+
+		//TODO: push the largest thing we can until the measure's full
+		//measure.tracks[trackN].push({duration:1,notes:[]});
+		var space=measure.timeN;
+		var units=measure.timeD;
+		var biggest=1/1; //start by trying to push whole notes
+		console.log("units: "+units);
+		while(space>0){
+			console.log("space: "+space+"\tbiggest: "+biggest);
+			if(space/units >= biggest){
+				console.log("\tpushed");
+				measure.tracks[trackN].push({duration:1/biggest,notes:[]});
+				space-=units/(1/biggest); //aka units*biggest, but this makes more sense in my head
+			}else{
+				console.log("\ttoo big");
+				biggest/=2;
+			}
+		}
+
+		if(this.selected!=null){
+			this.selected[1]=0; //set to first note in measure
+		}
+	}
+
+	addMeasure(){
+		var m={};
+		console.log(this.tab.measures.length);
+		const currM=(this.selected==null)? this.tab.measures[this.tab.measures.length-1] : this.tab.measures[this.measure()];
+		m.timeN=currM.timeN;
+		m.timeD=currM.timeD;
+		m.tempo=currM.tempo;
+		m.tracks=[];
+		for(var i=0;i<this.tab.tracks.length;i++){
+			this.clearTrackMeasure(m,i); //start as empty measure for all tracks
+		}
+		//insert into measures array
+		this.tab.measures.splice((this.measure()==null)?this.tab.measures.length:this.measure()+1,0,m);
+		if(this.selected!=null){
+			this.selected[0]++;
+		}
+	}
+
+	deleteMeasure(){
+		if(this.selected==null){
+			return;
+		}
+		this.tab.measures.splice(this.measure(),1);
+	}
+
+	changeTimeN(measureN,timeN){
+		this.tab.measures[measureN].timeN=timeN;
+		this.clearTrackMeasure(this.tab.measures[measureN],this.track);
+	}
+	changeTimeD(measureN,timeD){
+		this.tab.measures[measureN].timeD=timeD;
+		this.clearTrackMeasure(this.tab.measures[measureN],this.track);
+	}
+	changeTempo(measureN,tempo){
+		this.tab.measures[measureN].tempo=tempo;
+	}
 }

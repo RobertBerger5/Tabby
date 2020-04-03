@@ -106,6 +106,7 @@ class Drawer{
 				this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*this.noteHeight);
 			}
 		}
+		this.drawSelector(editor.selected);
 	}
 
 	drawLine(draw,x1,y1,x2,y2){
@@ -171,6 +172,7 @@ class Drawer{
 		text.setAttribute("y",y-charHeight/3);
 		text.textContent=num;
 		text.setAttribute("class","timeS");
+		//text.setAttribute("onclick","changeTimeN()"); TODO: click to change signature for that measure
 		draw.appendChild(text);
 		text=document.createElementNS("http://www.w3.org/2000/svg","text");
 		text.setAttribute("x",x);

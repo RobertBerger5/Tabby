@@ -9,18 +9,25 @@
 	</head>
 	<body>
 		<!--TODO: make this part cleaner-->
+		<p><i>"(!)" indicates a destructive action</i></p>
+		<button onclick="clearTrackMeasure()">Clear Track Measure (!)</button>
+		<button onclick="addMeasure()">Add Measure</button>
+		<button onclick="deleteMeasure()">Delete Measure (!)</button>
+		<br /><br />
+		<input type="text" placeholder="new tempo" onchange="changeTempo(this.value); this.value=''">
+		<br />
+		<input type="text" placeholder="new time signature" onchange="changeTimeN(this.value); this.value=''">
+		<br />
+		<input type="text" placeholder="new time signature" onchange="changeTimeD(this.value); this.value=''">
+		<br />
+		<!--TODO: radio selector for rhythms-->
+		
 		<p>Current Track:
 			<select id="trackSelector" onchange="changeTrack()">
 			</select> <!--loads dynamically below-->
 		</p>
-		<!--TODO: more editing options:
-			add/delete measure/s
-			change time signature for current measure
-			change tempo for current measure
-			(probably others I'm forgetting)
-		-->
 
-		<svg id="draw" height="10000">
+		<svg id="draw" height="1000">
 		</svg>
 		<script>
 			//hardcoded crazy train, rhythm things, and another one bites the dust, for ease of editing

@@ -83,6 +83,7 @@ class Player{
 
 	//TODO: rewrite playTrackMeasure and this to have them play at the same times, not nanoseconds off. AudioContext has ways of dealing with that, you don't need to be able to edit the notes of the current measure. That'll sound fine I think
 	getSound(track,stringN,fret){
+		//TODO: somehow have attacks and releases to make it sound more like a guitar
 		var note=this.context.createOscillator();
 		note.type="sine";
 		note.frequency.value=this.getFrequency(track.strings[stringN],fret);
