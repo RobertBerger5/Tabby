@@ -36,17 +36,17 @@ class Drawer{
 		//const noteWidth=30;
 		//const noteHeight=15; //should stay consistant with what's in tab.css
 		//keep track so we know to redraw when these change, start them off at impossible values that we'll have to redraw to start with
-		var currTimeN=-1;
-		var currTimeD=-1;
-		var currTempo=-1;
+		let currTimeN=-1;
+		let currTimeD=-1;
+		let currTempo=-1;
 		//where the current drawhead is
-		var xStart=0;
-		var yStart=30;
+		let xStart=0;
+		let yStart=30;
 		const stringN=this.tab.tracks[selectedTrack].strings.length; //number of strings in this track
 		//vertical line at the start of a measure
 		this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*this.noteHeight);
 		//for(const measure of this.tab.measures){ //needed measure index for id's
-		for(var iMeasure=0;iMeasure<this.tab.measures.length;iMeasure++){//draw each measure
+		for(let iMeasure=0;iMeasure<this.tab.measures.length;iMeasure++){//draw each measure
 			const measure=this.tab.measures[iMeasure];
 			const track=measure.tracks[selectedTrack];
 
@@ -60,7 +60,7 @@ class Drawer{
 			//if the time signature changed, redraw that now
 			if(measure.timeN!=currTimeN || measure.timeD!=currTimeD){
 				//draw strings behind it
-				for(var i=0;i<stringN;i++){//draw strings
+				for(let i=0;i<stringN;i++){//draw strings
 					//line should be exactly as long as the time signature, meaning we have to look at how many characters are in it (which is a number in base 10, so we use log10)
 					this.drawLine(this.window,xStart,yStart,xStart+this.noteWidth*(1+Math.log10(max(measure.timeN,measure.timeD))),yStart);
 					yStart+=this.noteHeight;
@@ -73,10 +73,10 @@ class Drawer{
 				xStart+=this.noteWidth*(Math.log10(max(currTimeN,currTimeD)));
 			}
 			//for(const beat of track){ //draw every beat
-			for(var iBeat=0;iBeat<track.length;iBeat++){
+			for(let iBeat=0;iBeat<track.length;iBeat++){
 				const beat=track[iBeat];
 				//draw strings first
-				for(var i=0;i<stringN;i++){
+				for(let i=0;i<stringN;i++){
 					this.drawLine(this.window,xStart,yStart,xStart+this.noteWidth,yStart);
 					yStart+=this.noteHeight;
 				}
@@ -85,11 +85,11 @@ class Drawer{
 				yStart-=this.noteHeight*stringN; //reset drawhead to top string
 				for(const note of beat.notes){ //draw all notes
 					//TODO: come up with a way to get unique id's for all of em?
-					//var id="["+iMeasure+","+iBeat+","+note.string+"]";
+					//let id="["+iMeasure+","+iBeat+","+note.string+"]";
 					this.drawFret(this.window,xStart+this.noteWidth/2,yStart+note.string*this.noteHeight+this.noteHeight/3,note.fret);//draw fret number on correct string
 				}
-				for(var i=0;i<stringN;i++){
-					var id="["+iMeasure+","+iBeat+","+i+"]";
+				for(let i=0;i<stringN;i++){
+					let id="["+iMeasure+","+iBeat+","+i+"]";
 					this.drawSelectionDummy(this.window,xStart,yStart,id);
 					yStart+=this.noteHeight;
 				}
@@ -110,7 +110,7 @@ class Drawer{
 	}
 
 	drawLine(draw,x1,y1,x2,y2){
-		var line=document.createElementNS("http://www.w3.org/2000/svg","line");
+		let line=document.createElementNS("http://www.w3.org/2000/svg","line");
 		line.setAttribute("x1",x1);
 		line.setAttribute("y1",y1);
 		line.setAttribute("x2",x2);
@@ -120,7 +120,7 @@ class Drawer{
 	}
 
 	drawText(draw,x,y,txt){
-		var text=document.createElementNS("http://www.w3.org/2000/svg","text");
+		let text=document.createElementNS("http://www.w3.org/2000/svg","text");
 		text.setAttribute("x",x);
 		text.setAttribute("y",y);
 		text.textContent=txt;
@@ -132,7 +132,7 @@ class Drawer{
 		const charWidth=7;
 		const charHeight=15; //align with what's in tab.css
 		//white rectangle behind it to cover the strings
-		var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+		let rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
 		rect.setAttribute("x",x);
 		rect.setAttribute("y",y-charHeight);
 		if(fret>0){
@@ -145,7 +145,7 @@ class Drawer{
 		rect.setAttribute("fill","white");
 		draw.appendChild(rect);
 
-		var text=document.createElementNS("http://www.w3.org/2000/svg","text");
+		let text=document.createElementNS("http://www.w3.org/2000/svg","text");
 		text.setAttribute("x",x);
 		text.setAttribute("y",y);
 		text.textContent=fret;
@@ -158,7 +158,7 @@ class Drawer{
 		const charWidth=150;
 		const charHeight=35;
 		//white rectangle behind it to cover the strings
-		var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+		let rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
 		rect.setAttribute("x",x);
 		rect.setAttribute("y",y-charHeight);
 		//rectangle should be the width of all chars in the text (or at least the longest one...)
@@ -167,7 +167,7 @@ class Drawer{
 		rect.setAttribute("fill","white");
 		draw.appendChild(rect);
 
-		var text=document.createElementNS("http://www.w3.org/2000/svg","text");
+		let text=document.createElementNS("http://www.w3.org/2000/svg","text");
 		text.setAttribute("x",x);
 		text.setAttribute("y",y-charHeight/3);
 		text.textContent=num;
@@ -187,7 +187,7 @@ class Drawer{
 		const ry=1.5;
 		const stroke=1.5;
 		const topOfLine=stroke*10;
-		var note = document.createElementNS("http://www.w3.org/2000/svg","ellipse");
+		let note = document.createElementNS("http://www.w3.org/2000/svg","ellipse");
 		note.setAttribute("cx",x);
 		note.setAttribute("cy",y);
 		note.setAttribute("rx",rx);
@@ -202,7 +202,7 @@ class Drawer{
 			}
 		}
 		//vertical line on everything but whole notes
-		var line=document.createElementNS("http://www.w3.org/2000/svg","line");
+		let line=document.createElementNS("http://www.w3.org/2000/svg","line");
 		line.setAttribute("x1",x+rx);
 		line.setAttribute("y1",y);
 		line.setAttribute("x2",x+rx);
@@ -211,8 +211,8 @@ class Drawer{
 		line.setAttribute("stroke","black");
 		draw.appendChild(line);
 		draw.appendChild(note);
-		//for(var i=duration;i<=0;i++){//lazy coding, wanna add lines to non-quarter notes
-		for(var i=Math.log2(duration)-3;i>=0;i--){
+		//for(let i=duration;i<=0;i++){//lazy coding, wanna add lines to non-quarter notes
+		for(let i=Math.log2(duration)-3;i>=0;i--){
 			line=document.createElementNS("http://www.w3.org/2000/svg","line");
 			line.setAttribute("x1",x+rx);
 			line.setAttribute("y1",y-topOfLine+i*3);
@@ -227,7 +227,7 @@ class Drawer{
 		}
 	}
 	drawSelectionDummy(draw,x,y,id){
-		var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+		let rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
 		rect.setAttribute("x",x);
 		rect.setAttribute("y",y-this.noteHeight/2);
 		rect.setAttribute("width",this.noteWidth);

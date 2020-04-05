@@ -27,12 +27,12 @@ class Player{
 	async play(startMeasure){
 		this.playing=true;
 		startMeasure=(startMeasure==null)? 0:startMeasure;
-		for(var measureN=startMeasure;measureN<this.tab.measures.length;measureN++){
+		for(let measureN=startMeasure;measureN<this.tab.measures.length;measureN++){
 			if(this.playing==false){ //user paused playback
 				return;
 			}
 			const measure=this.tab.measures[measureN];
-			for(var trackN=0;trackN<measure.tracks.length;trackN++){
+			for(let trackN=0;trackN<measure.tracks.length;trackN++){
 				new Promise(()=>this.playTrackMeasure(trackN,measure));
 			}
 			const beat=60/measure.tempo;
@@ -50,13 +50,13 @@ class Player{
 		const beat=60/measure.tempo; //this many seconds for each note
 		for(const note of measure.tracks[trackN]){
 			//set up all notes to be played
-			var sounds=[];
+			let sounds=[];
 			for(const pitch of note.notes){
-				var sound=this.getSound(track,pitch.string,pitch.fret);
+				let sound=this.getSound(track,pitch.string,pitch.fret);
 				sounds.push(sound);
 			}
 			//start them at the same time
-			for(sound of sounds){
+			for(let sound of sounds){
 				sound.note.start();
 				/*sound.volume.gain.exponentialRampToValueAtTime(
 					1,this.context.currentTime+this.noteBufferSpace
@@ -71,7 +71,7 @@ class Player{
 			//wait a bit
 			await sleep(duration);
 			//end them at the same time
-			for(sound of sounds){
+			for(let sound of sounds){
 				//sound.note.stop();
 				sound.volume.gain.linearRampToValueAtTime(
 					this.mute,this.context.currentTime+this.noteBufferSpace
@@ -84,12 +84,12 @@ class Player{
 	//TODO: rewrite playTrackMeasure and this to have them play at the same times, not nanoseconds off. AudioContext has ways of dealing with that, you don't need to be able to edit the notes of the current measure. That'll sound fine I think
 	getSound(track,stringN,fret){
 		//TODO: somehow have attacks and releases to make it sound more like a guitar
-		var note=this.context.createOscillator();
+		let note=this.context.createOscillator();
 		note.type="sine";
 		note.frequency.value=this.getFrequency(track.strings[stringN],fret);
-		var volume=this.context.createGain();
+		let volume=this.context.createGain();
 		volume.gain.value=.1;
-		var distort=this.context.createWaveShaper();
+		let distort=this.context.createWaveShaper();
 		distort.curve=makeDistortionCurve(1000);
 		distort.oversample='4x';
 		note.connect(volume);
@@ -103,17 +103,17 @@ class Player{
 	}
 
 	getFrequency(string,fret){
-		var noteNumber=this.notes.indexOf(string.note);
+		let noteNumber=this.notes.indexOf(string.note);
 		//console.log("noteNumber is "+noteNumber);
-		var retNote=this.notes[(noteNumber+fret)%12];
-		var retOctave=string.octave+Math.floor((noteNumber+fret)/12);
-		console.log(retNote+retOctave)
+		let retNote=this.notes[(noteNumber+fret)%12];
+		let retOctave=string.octave+Math.floor((noteNumber+fret)/12);
+		//console.log(retNote+retOctave)
 		return this.frequencies[retNote+retOctave];
 	}
 }
 
 function makeDistortionCurve( amount ) {
-	var k = typeof amount === 'number' ? amount : 50,
+	let k = typeof amount === 'number' ? amount : 50,
 		n_samples = 44100,
 		curve = new Float32Array(n_samples),
 		deg = Math.PI / 180,
