@@ -89,3 +89,7 @@ function changeRhythm(rhythm){
 	editor.changeRhythm(editor.measure(),editor.beat(),rhythm);
 	drawer.drawTab(currTrack);
 }
+
+function showJSON(){
+	console.log(JSON.stringify(tab).replace(/\"/g,"\\\""));
+}

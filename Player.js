@@ -3,9 +3,25 @@ class Player{
 	constructor(tab){
 		this.tab=tab;
 		this.playing=false;
+		//set up audiocontext
 		this.context=new AudioContext();
-		this.mute=.01;
+		this.comp=this.context.createDynamicsCompressor();
+		this.comp.threshold.value=-100;
+		this.comp.knee.value=40;
+		this.comp.ratio.value=20;
+		this.comp.attack.value=0.0;
+		this.comp.release.value=0.1;
+		this.masterVolume=this.context.createGain();
+		this.masterVolume.gain.value=10;
+		this.comp.connect(this.masterVolume);
+		this.masterVolume.connect(this.context.destination);
+		//TODO: every track gets its own channel to play through
+		//because each note doesn't get its own fucking amplifier, they all go through the same one. idiot.
+
+		//some constant vars
+		this.mute=.1;
 		this.noteBufferSpace=.04;
+
 		this.notes=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']; //so we can iterate through em to find the right pitches
 		this.frequencies = { //all frequencies of every possible note, courtesy of https://gist.github.com/marcgg/94e97def0e8694f906443ed5262e9cbb
 			'C0': 16.35,'C#0': 17.32,'Db0': 17.32,'D0': 18.35,'D#0': 19.45,'Eb0': 19.45,'E0': 20.60,'F0': 21.83,'F#0': 23.12,'Gb0': 23.12,'G0': 24.50,'G#0': 25.96,'Ab0': 25.96,'A0': 27.50,'A#0': 29.14,'Bb0': 29.14,'B0': 30.87,
@@ -23,7 +39,6 @@ class Player{
 	/*
 		for each measure, asynchronously play all tracks (so the overall song stays in sync)
 	*/
-
 	async play(startMeasure){
 		this.playing=true;
 		startMeasure=(startMeasure==null)? 0:startMeasure;
@@ -73,7 +88,7 @@ class Player{
 			//end them at the same time
 			for(let sound of sounds){
 				//sound.note.stop();
-				sound.volume.gain.linearRampToValueAtTime(
+				sound.volume.gain.exponentialRampToValueAtTime(
 					this.mute,this.context.currentTime+this.noteBufferSpace
 				);
 				sound.note.stop(this.context.currentTime+this.noteBufferSpace);
@@ -88,14 +103,14 @@ class Player{
 		note.type="sine";
 		note.frequency.value=this.getFrequency(track.strings[stringN],fret);
 		let volume=this.context.createGain();
-		volume.gain.value=.1;
+		volume.gain.value=1;
 		let distort=this.context.createWaveShaper();
-		distort.curve=makeDistortionCurve(1000);
+		distort.curve=makeDistortionCurve(100);
 		distort.oversample='4x';
 		note.connect(volume);
 		volume.connect(distort);
-		distort.connect(this.context.destination);
-		//volume.connect(this.context.destination);
+		distort.connect(this.comp);
+		//distort.connect(this.context.destination);
 		return {
 			note: note,
 			volume: volume,
@@ -113,15 +128,12 @@ class Player{
 }
 
 function makeDistortionCurve( amount ) {
-	let k = typeof amount === 'number' ? amount : 50,
-		n_samples = 44100,
-		curve = new Float32Array(n_samples),
-		deg = Math.PI / 180,
-		i = 0,
-		x;
-	for ( ; i < n_samples; ++i ) {
-		x = i * 2 / n_samples - 1;
-		curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+	let n_samples = 44100;
+	let curve = new Float32Array(n_samples);
+	let deg = Math.PI/180;
+	for (let i=0; i < n_samples; ++i) {
+		let x = i * 2 / n_samples - 1;
+		curve[i] = (3+amount) *x*20*deg / (Math.PI+amount*Math.abs(x));
 	}
 	return curve;
 };
