@@ -13,6 +13,7 @@
 		<button onclick="clearTrackMeasure()">Clear Track Measure (!)</button>
 		<button onclick="addMeasure()">Add Measure</button>
 		<button onclick="deleteMeasure()">Delete Measure (!)</button>
+		<br /><!--TODO: copy/paste measure buttons-->
 		<br /><br />
 		<input type="text" placeholder="new tempo" onchange="changeTempo(this.value); this.value=''">
 		<br />
@@ -21,10 +22,17 @@
 		<input type="text" placeholder="new time signature" onchange="changeTimeD(this.value); this.value=''">
 		<br />
 		<!--TODO: radio selector for rhythms-->
-		
+		<input type="radio" name="noteDurations" onchange="changeRhythm(this.value);this.checked=false" value="1">1</input>
+		<input type="radio" name="noteDurations" onchange="changeRhythm(this.value);this.checked=false" value="2">2</input>
+		<input type="radio" name="noteDurations" onchange="changeRhythm(this.value);this.checked=false" value="4">4</input>
+		<input type="radio" name="noteDurations" onchange="changeRhythm(this.value);this.checked=false" value="8">8</input>
+		<input type="radio" name="noteDurations" onchange="changeRhythm(this.value);this.checked=false" value="16">16</input>
+		<input type="radio" name="noteDurations" onchange="changeRhythm(this.value);this.checked=false" value="32">32</input>
+		<input type="radio" name="noteDurations" onchange="changeRhythm(this.value);this.checked=false" value="64">64</input>
+
 		<p>Current Track:
 			<select id="trackSelector" onchange="changeTrack()">
-			</select> <!--loads dynamically below-->
+			</select> <!--loads dynamically below, TODO: way to change the track (name, voice, and strings)-->
 		</p>
 
 		<svg id="draw" height="1000">
@@ -240,11 +248,11 @@
 			$("#draw").mouseenter(()=>{inDraw=true});
 			$("#draw").mouseleave(()=>{inDraw=false});
 			$("body").keydown((event)=>{
-				if(inDraw){ //don't use the editor if they pressed a key outside the editor
-					if([32,37,38,39,40].indexOf(event.keyCode)>-1){
+				if([32,37,38,39,40].indexOf(event.keyCode)>-1){
 						//prevent arrow keys and space from scrolling the page
 						event.preventDefault();
 					}
+				if(inDraw){ //don't use the editor if they pressed a key outside the editor
 					if(event.keyCode==32){
 						if(!player.playing){
 							player.play(editor.measure());

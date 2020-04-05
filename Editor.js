@@ -6,7 +6,7 @@ class Editor{
 		this.track=track; //track we're currently editing
 		this.selected=null; //measure, beat, string
 	}
-	select(newSelect){
+	select(newSelect){ //TODO: rewrite handleKey to use this function, then update the noteDurations radio input to whatever the duration of the newly selected note is
 		//console.log(newSelect);
 		this.selected=newSelect;
 		//console.log("now selected "+this.selected);
@@ -120,20 +120,19 @@ class Editor{
 		//assert: they have a track selected
 		measure.tracks[trackN]=[];
 
-		//TODO: push the largest thing we can until the measure's full
-		//measure.tracks[trackN].push({duration:1,notes:[]});
+		//basic idea: push the largest rhythm we can until the measure's full
 		var space=measure.timeN;
 		var units=measure.timeD;
 		var biggest=1/1; //start by trying to push whole notes
-		console.log("units: "+units);
+		//console.log("units: "+units);
 		while(space>0){
-			console.log("space: "+space+"\tbiggest: "+biggest);
+			//console.log("space: "+space+"\tbiggest: "+biggest);
 			if(space/units >= biggest){
-				console.log("\tpushed");
+				//console.log("\tpushed");
 				measure.tracks[trackN].push({duration:1/biggest,notes:[]});
 				space-=units/(1/biggest); //aka units*biggest, but this makes more sense in my head
 			}else{
-				console.log("\ttoo big");
+				//console.log("\ttoo big");
 				biggest/=2;
 			}
 		}
@@ -166,6 +165,8 @@ class Editor{
 			return;
 		}
 		this.tab.measures.splice(this.measure(),1);
+
+		this.select(this.selected[this.measure()-1,this.beat(),this.string()])
 	}
 
 	changeTimeN(measureN,timeN){
@@ -178,5 +179,86 @@ class Editor{
 	}
 	changeTempo(measureN,tempo){
 		this.tab.measures[measureN].tempo=tempo;
+	}
+
+	changeRhythm(measureN,beatN,duration){
+		//TODO: if I change a rhythm, sometimes it doesn't even realize that duration<beat.duration. how??
+		console.log("change measure "+measureN+", beat "+beatN+" to "+duration);
+		var measure=this.tab.measures[measureN].tracks[this.track];
+		var beat=measure[beatN];
+		if(duration==beat.duration){
+			console.log("same tho");
+			return;
+		}else if(duration>beat.duration){//new rhythm is smaller, just have to fill in the gap
+			var space=(1/beat.duration)-(1/duration);
+			console.log("space to fill: "+space);
+			var biggest=(1/beat.duration)/2; //start with trying to fill it with the next smallest note
+			while(space>0){
+				if(biggest<=space){
+					this.tab.measures[measureN].tracks[this.track].splice(beatN+1,0,{duration:1/biggest,notes:[]});
+					space-=biggest;
+					//console.log("\tpushed "+biggest);
+				}else{
+					//console.log("\t"+biggest+" was too big");
+					biggest/=2;
+				}
+			}
+		}else{//new rhythm is bigger, delete notes to be overwritten, then fill in potential gap
+			//clear out notes to make space
+			var pave=(1/duration)-(1/beat.duration);
+			console.log("space to be paved: "+pave);
+			/*pseudocode:
+				iterate through next notes, decreasing pave until it's (<= 0)
+					OR until we run out of notes in that measure (alert, return)
+				then, calculate how much space we have to fill in (if any)
+				confirm screen before we delete them
+					(might need a flag to see if any weren't rests)
+				delete that many notes after current note
+				fill in that amount of space
+			*/
+			var deleteNum=0;//number of notes after the current one that should be deleted
+			var i=1;//how many notes past I to go
+			//(flag for allrests=true, turns to false if any non-rests)
+			var allRests=true;
+			while(pave>0){
+				//if there is no beat+i, alert and return
+				try{
+					//subtract (beat+i)'s duration from pave
+					pave-=1/(measure[beatN+i].duration);
+					console.log("delete "+(1/(measure[beatN+i].duration)));
+					if(measure[beatN+i].notes.length>0){
+						allRests=false;
+					}
+					deleteNum++;
+					i++;
+				}catch(e){
+					alert("can't put that rhythm here, no space");
+					console.log(e.message);
+					return;
+				}
+			}
+			console.log("pave is now "+pave);
+			//confirm (if allrests==false), then delete
+			if(!allRests && !confirm("Changing this rhythm will delete the next "+deleteNum+" notes")){
+				return;
+			}
+			measure.splice(beatN+1,deleteNum);
+			//if pave is less than zero, there's space to fill at beat+1 (copy/pasted from working gap-fill code above, replacing space var with -pave)
+			if(pave<0){
+				pave*= -1;
+				var biggest=(1/duration)/2; //start with trying to fill it with the next smallest note
+				while(pave>0){
+					if(biggest<=pave){
+						this.tab.measures[measureN].tracks[this.track].splice(beatN+1,0,{duration:1/biggest,notes:[]});
+						pave-=biggest;
+					}else{
+						biggest/=2;
+					}
+				}
+			}
+		}
+		//whatever happened before, the duration of the current note should've changed
+		//(unless we chickened out above and returned before deleting any notes)
+		beat.duration=duration;
 	}
 }

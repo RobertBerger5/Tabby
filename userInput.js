@@ -15,7 +15,7 @@ function changeTrack(){
 }
 
 function clearTrackMeasure(){
-	if(!confirm("Clear This Measure?")){
+	if(!confirm("Clear This Measure? (won't apply to other tracks)")){
 		return;
 	}
 	editor.clearTrackMeasure(tab.measures[editor.measure()],editor.track);
@@ -79,4 +79,13 @@ function changeTempo(tempo){
 	}else{
 		alert("yo what");
 	}
+}
+
+function changeRhythm(rhythm){
+	if(editor.selected==null){
+		alert("no note selected");
+		return;
+	}
+	editor.changeRhythm(editor.measure(),editor.beat(),rhythm);
+	drawer.drawTab(currTrack);
 }
