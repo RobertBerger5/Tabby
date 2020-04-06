@@ -5,22 +5,41 @@ class Player{
 		this.playing=false;
 		//set up audiocontext
 		this.context=new AudioContext();
-		this.comp=this.context.createDynamicsCompressor();
-		this.comp.threshold.value=-100;
-		this.comp.knee.value=40;
-		this.comp.ratio.value=20;
-		this.comp.attack.value=0.0;
-		this.comp.release.value=0.1;
+		//all amps connect to this, which then goes straight to the speakers
 		this.masterVolume=this.context.createGain();
 		this.masterVolume.gain.value=10;
-		this.comp.connect(this.masterVolume);
 		this.masterVolume.connect(this.context.destination);
+		this.amps=[];//different amp for each track
+		for(let i=0;i<tab.tracks.length;i++){
+			//each amp gets its own gain that connects to the master volume (where all tracks converge)
+			let gain=this.context.createGain();
+			gain.value=1;
+			gain.connect(this.masterVolume);
+			//each amp should have its own compressor that keeps its volume in check
+			let comp=this.context.createDynamicsCompressor();
+			comp.threshold.value=-100;
+			comp.knee.value=40;
+			comp.ratio.value=20;
+			comp.attack.value=0.0;
+			comp.release.value=0.1;
+			//connect to the track's volume knob
+			comp.connect(gain);
+			//each note connects to their respective track's input node, where its voicing is different depending on its "voicing" (distorted guitar, bass, etc.)
+			let input=this.getInput(tab.tracks[i].voice,comp);
+			this.amps[i]={
+				comp:comp, //not sure I need to give access to the compressor, but it can't hurt atm
+				volume:gain,
+				input:input
+			}
+		}
 		//TODO: every track gets its own channel to play through
 		//because each note doesn't get its own fucking amplifier, they all go through the same one. idiot.
 
 		//some constant vars
-		this.mute=.1;
-		this.noteBufferSpace=.04;
+		this.mute=.05;
+		this.attack=.02;
+		this.decay=this.attack+.02;
+		this.release=.02;
 
 		this.notes=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']; //so we can iterate through em to find the right pitches
 		this.frequencies = { //all frequencies of every possible note, courtesy of https://gist.github.com/marcgg/94e97def0e8694f906443ed5262e9cbb
@@ -37,7 +56,7 @@ class Player{
 	}
 
 	/*
-		for each measure, asynchronously play all tracks (so the overall song stays in sync)
+		for each measure, asynchronously play all tracks (so the overall song stays in sync across tracks)
 	*/
 	async play(startMeasure){
 		this.playing=true;
@@ -67,14 +86,17 @@ class Player{
 			//set up all notes to be played
 			let sounds=[];
 			for(const pitch of note.notes){
-				let sound=this.getSound(track,pitch.string,pitch.fret);
+				let sound=this.getSound(trackN,pitch.string,pitch.fret);
 				sounds.push(sound);
 			}
 			//start them at the same time
 			for(let sound of sounds){
 				sound.note.start();
+				sound.volume.gain.linearRampToValueAtTime(1,this.context.currentTime+this.attack);
+				//palm muting is all attack, so tone the non-attack parts waaay down when I add that decoration
+				sound.volume.gain.exponentialRampToValueAtTime(.5,this.context.currentTime+this.decay);
 				/*sound.volume.gain.exponentialRampToValueAtTime(
-					1,this.context.currentTime+this.noteBufferSpace
+					1,this.context.currentTime+this.release
 				)*/
 			}
 			//beat=60/tempo		that many seconds for each note of duration timeD
@@ -88,35 +110,32 @@ class Player{
 			//end them at the same time
 			for(let sound of sounds){
 				//sound.note.stop();
-				sound.volume.gain.exponentialRampToValueAtTime(
-					this.mute,this.context.currentTime+this.noteBufferSpace
+				sound.volume.gain.linearRampToValueAtTime(
+					this.mute,this.context.currentTime+this.release
 				);
-				sound.note.stop(this.context.currentTime+this.noteBufferSpace);
+				sound.note.stop(this.context.currentTime+this.release);
 			}
 		}
 	}
 
 	//TODO: rewrite playTrackMeasure and this to have them play at the same times, not nanoseconds off. AudioContext has ways of dealing with that, you don't need to be able to edit the notes of the current measure. That'll sound fine I think
-	getSound(track,stringN,fret){
+	getSound(trackN,stringN,fret){
 		//TODO: somehow have attacks and releases to make it sound more like a guitar
 		let note=this.context.createOscillator();
 		note.type="sine";
-		note.frequency.value=this.getFrequency(track.strings[stringN],fret);
+		note.frequency.value=this.getFrequency(this.tab.tracks[trackN].strings[stringN],fret);
 		let volume=this.context.createGain();
-		volume.gain.value=1;
-		let distort=this.context.createWaveShaper();
-		distort.curve=makeDistortionCurve(100);
-		distort.oversample='4x';
+		volume.gain.value=0;
 		note.connect(volume);
-		volume.connect(distort);
-		distort.connect(this.comp);
-		//distort.connect(this.context.destination);
+		console.log(this.amps);
+		volume.connect(this.amps[trackN].input);
 		return {
 			note: note,
 			volume: volume,
 		};
 	}
 
+	//we know what the string is tuned to, and we know the fret, so we know the note being played. get its frequency
 	getFrequency(string,fret){
 		let noteNumber=this.notes.indexOf(string.note);
 		//console.log("noteNumber is "+noteNumber);
@@ -124,6 +143,22 @@ class Player{
 		let retOctave=string.octave+Math.floor((noteNumber+fret)/12);
 		//console.log(retNote+retOctave)
 		return this.frequencies[retNote+retOctave];
+	}
+
+	//each track its own input, which connect to their own compressors, which then all connect to a master volume control, that finally connects to this.context.destination (the user's speakers)
+	getInput(voice,output){
+		let input;
+		switch(voice){
+			case "guitar_distort":
+				input=this.context.createWaveShaper();
+				input.curve=makeDistortionCurve(200);
+				input.oversample='4x';
+				input.connect(output);
+				break;
+			default:
+				input=this.context.createAnalyser();
+		}
+		return input;
 	}
 }
 

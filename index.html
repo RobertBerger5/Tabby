@@ -6,49 +6,50 @@
 		<script src="Player.js"></script><!--class for playing the tab-->
 		<script src="userInput.js"></script><!--contains functions to handle user input-->
 		<link rel="stylesheet" href="tab.css" />
+		<link rel="stylesheet" href="userInterface.css" />
 	</head>
 	<body>
-		<!--TODO: make this part cleaner-->
-		<button onclick="showJSON()">Give me the tab!</button>
-		<p><i>"(!)" indicates a destructive action</i></p>
-		<button onclick="clearTrackMeasure()">Clear Track Measure (!)</button>
-		<button onclick="addMeasure()">Add Measure</button>
-		<button onclick="deleteMeasure()">Delete Measure (!)</button>
-		<br /><!--TODO: copy/paste measure buttons-->
-		<br /><br />
-		<input type="text" placeholder="new tempo" onchange="changeTempo(this.value); this.value=''">
-		<br />
-		<input type="text" placeholder="new time signature" onchange="changeTimeN(this.value); this.value=''">
-		<br />
-		<input type="text" placeholder="new time signature" onchange="changeTimeD(this.value); this.value=''">
-		<br />
-		<button onclick="changeRhythm(1)">1</button>
-		<button onclick="changeRhythm(2)">2</button>
-		<button onclick="changeRhythm(4)">4</button>
-		<button onclick="changeRhythm(8)">8</button>
-		<button onclick="changeRhythm(16)">16</button>
-		<button onclick="changeRhythm(32)">32</button>
-		<button onclick="changeRhythm(64)">64</button>
-		<br />
-		<!--let this stand as a testament to how disgusting weakly-typed languages are. I just spent about 3 hours trying to track down why it was saying 16<8, and it turns out that "16"<"8". >:( -->
-		<!--<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="1">1</input>
-		<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="2">2</input>
-		<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="4">4</input>
-		<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="8">8</input>
-		<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="16">16</input>
-		<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="32">32</input>
-		<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="64">64</input>-->
-
-		<p>Current Track:
-			<select id="trackSelector" onchange="changeTrack()">
-			</select> <!--loads dynamically below, TODO: way to change the track (name, voice, and strings)-->
-		</p>
+		<div id="userInterface">
+			<!--TODO: make this part prettier-->
+			<p>Note duration:
+				<button onclick="changeRhythm(1)">whole</button>
+				<button onclick="changeRhythm(2)">half</button>
+				<button onclick="changeRhythm(4)">quarter</button>
+				<button onclick="changeRhythm(8)">8th</button>
+				<button onclick="changeRhythm(16)">16th</button>
+				<button onclick="changeRhythm(32)">32nd</button>
+				<button onclick="changeRhythm(64)">64th</button>
+			</p>
+			<p>Current Track:
+				<select id="trackSelector" onchange="changeTrack()">
+				</select> <!--loads dynamically below, TODO: way to change the track (name, voice, and strings)-->
+			</p>
+			<button onclick="clearTrackMeasure()">Clear Track Measure</button>
+			<button onclick="addMeasure()">Add Measure</button>
+			<button onclick="deleteMeasure()">Delete Measure</button>
+			<br /><!--TODO: copy/paste measure buttons-->
+			<input type="number" placeholder="new tempo" onchange="changeTempo(this.value);this.value='';this.blur()">
+			<br />
+			<input type="text" placeholder="new time signature" onchange="changeTimeN(this.value);this.value='';this.blur()">
+			<br />
+			<input type="text" placeholder="new time signature" onchange="changeTimeD(this.value);this.value='';this.blur()">
+			<br />
+			<!--let this stand as a testament to how disgusting weakly-typed languages are. I just spent about 3 hours trying to track down why it was saying 16<8, and it turns out that "16"<"8". >:( -->
+			<!--<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="1">1</input>
+			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="2">2</input>
+			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="4">4</input>
+			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="8">8</input>
+			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="16">16</input>
+			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="32">32</input>
+			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="64">64</input>-->
+			<button onclick="showJSON()">Give me the tab!</button>
+		</div>
 
 		<svg id="draw" height="1000">
 		</svg>
 		<script>
 			hardcodedTab=JSON.parse("\
-				{\"info\":{\"title\":\"(title)\"},\"tracks\":[{\"name\":\"andy on lead\",\"voice\":\"guitar_distort\",\"strings\":[{\"note\":\"E\",\"octave\":4},{\"note\":\"B\",\"octave\":3},{\"note\":\"G\",\"octave\":3},{\"note\":\"D\",\"octave\":3},{\"note\":\"A\",\"octave\":2},{\"note\":\"E\",\"octave\":2}]},{\"name\":\"bass guy\",\"voice\":\"bass_picked\",\"strings\":[{\"note\":\"G\",\"octave\":2},{\"note\":\"D\",\"octave\":2},{\"note\":\"A\",\"octave\":1},{\"note\":\"E\",\"octave\":1}]}],\"measures\":[{\"timeN\":4,\"timeD\":4,\"tempo\":160,\"tracks\":[[{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":4}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":5}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":4}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":160,\"tracks\":[[{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":5}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":4}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":5}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":5}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":4}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":0}]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":160,\"tracks\":[[{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":4}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":5}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":4}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":2}]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":160,\"tracks\":[[{\"duration\":2,\"notes\":[{\"string\":4,\"fret\":5},{\"string\":3,\"fret\":7},{\"string\":2,\"fret\":7}]},{\"duration\":2,\"notes\":[{\"string\":4,\"fret\":7},{\"string\":3,\"fret\":9},{\"string\":2,\"fret\":9}]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":160,\"tracks\":[[{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":8,\"notes\":[{\"string\":3,\"fret\":7},{\"string\":2,\"fret\":6},{\"string\":1,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":8,\"notes\":[{\"string\":3,\"fret\":6},{\"string\":2,\"fret\":4},{\"string\":1,\"fret\":5},{\"string\":0,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":160,\"tracks\":[[{\"duration\":8,\"notes\":[{\"string\":3,\"fret\":4},{\"string\":2,\"fret\":2},{\"string\":1,\"fret\":3},{\"string\":0,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":4,\"notes\":[{\"string\":4,\"fret\":0},{\"string\":3,\"fret\":2},{\"string\":2,\"fret\":2},{\"string\":1,\"fret\":2}]},{\"duration\":32,\"notes\":[]},{\"duration\":32,\"notes\":[]},{\"duration\":32,\"notes\":[]},{\"duration\":32,\"notes\":[{\"string\":2,\"fret\":4}]},{\"duration\":32,\"notes\":[{\"string\":2,\"fret\":2}]},{\"duration\":32,\"notes\":[{\"string\":2,\"fret\":0}]},{\"duration\":32,\"notes\":[{\"string\":3,\"fret\":4}]},{\"duration\":32,\"notes\":[{\"string\":3,\"fret\":2}]},{\"duration\":32,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":32,\"notes\":[{\"string\":4,\"fret\":4}]},{\"duration\":32,\"notes\":[{\"string\":4,\"fret\":2}]},{\"duration\":32,\"notes\":[{\"string\":4,\"fret\":0}]}],[{\"duration\":1,\"notes\":[]}]]}]}\
+				{\"info\":{\"title\":\"(title)\"},\"tracks\":[{\"name\":\"lead guitar\",\"voice\":\"guitar_distort\",\"strings\":[{\"note\":\"E\",\"octave\":4},{\"note\":\"B\",\"octave\":3},{\"note\":\"G\",\"octave\":3},{\"note\":\"D\",\"octave\":3},{\"note\":\"A\",\"octave\":2},{\"note\":\"E\",\"octave\":2}]},{\"name\":\"bass guitar\",\"voice\":\"bass_picked\",\"strings\":[{\"note\":\"G\",\"octave\":2},{\"note\":\"D\",\"octave\":2},{\"note\":\"A\",\"octave\":1},{\"note\":\"E\",\"octave\":1}]}],\"measures\":[{\"timeN\":4,\"timeD\":4,\"tempo\":160,\"tracks\":[[{\"duration\":8,\"notes\":[{\"string\":3,\"fret\":4},{\"string\":2,\"fret\":2},{\"string\":1,\"fret\":3},{\"string\":0,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":4,\"notes\":[{\"string\":4,\"fret\":0},{\"string\":3,\"fret\":2},{\"string\":2,\"fret\":2},{\"string\":1,\"fret\":2}]},{\"duration\":32,\"notes\":[]},{\"duration\":32,\"notes\":[]},{\"duration\":32,\"notes\":[]},{\"duration\":32,\"notes\":[{\"string\":2,\"fret\":4}]},{\"duration\":32,\"notes\":[{\"string\":2,\"fret\":2}]},{\"duration\":32,\"notes\":[{\"string\":2,\"fret\":0}]},{\"duration\":32,\"notes\":[{\"string\":3,\"fret\":4}]},{\"duration\":32,\"notes\":[{\"string\":3,\"fret\":2}]},{\"duration\":32,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":32,\"notes\":[{\"string\":4,\"fret\":4}]},{\"duration\":32,\"notes\":[{\"string\":4,\"fret\":2}]},{\"duration\":32,\"notes\":[{\"string\":4,\"fret\":0}]}],[{\"duration\":1,\"notes\":[]}]]}]}\
 				");
 		</script>
 		<script>
@@ -92,7 +93,7 @@
 						//prevent arrow keys and space from scrolling the page
 						event.preventDefault();
 					}
-				if(inDraw || true){ //don't use the editor if they pressed a key outside the editor
+				if(inDraw){ //don't use the editor if they pressed a key outside the editor
 					if(event.keyCode==32){
 						if(!player.playing){
 							player.play(editor.measure());
