@@ -5,16 +5,17 @@ class Editor{
 		this.tab=tab;
 		this.track=track; //track we're currently editing
 		this.selected=null; //measure, beat, string
+		this.twoDigitFret=false; //flag to see if the user's trying to enter two digits
+		this.firstDigit=null;//goes with this.twoDigitFret, the first digit the user entered
 	}
 	select(newSelect){ //TODO: rewrite handleKey to use this function, then update the noteDurations radio input to whatever the duration of the newly selected note is
-		//console.log(newSelect);
 		this.selected=newSelect;
-		//console.log("now selected "+this.selected);
-		//console.log(this.getNote());
+		this.twoDigitFret=false;
 	}
 	changeTrack(track){
 		this.track=track;
 		this.selected=null;
+		this.twoDigitFret=false;
 	}
 	//makes things more readable
 	measure(){return ((this.selected!=null)?this.selected[0]:null);}
@@ -60,10 +61,24 @@ class Editor{
 
 	handleKey(key){
 		//console.log("Editor will handle keypress "+key);
-		if(key>=48 && key<=57){
+		if(key>=48 && key<=57){ //TODO: = key is 187, use for holds?
 			//number key pressed
-			//TODO: if 1 or 2, maybe wait .1 seconds for another number?? currently can't have any frets beyond the 9th because no double digits
-			this.changeFret(key-48);
+			let fret=key-48;
+			if(this.twoDigitFret){
+				console.log("second digit: "+fret);
+				this.changeFret((this.firstDigit*10)+fret);
+				this.twoDigitFret=false;
+			}else{
+				if(fret==1 || fret ==2){
+					console.log("first digit: "+fret);
+					this.twoDigitFret=true;
+					this.firstDigit=fret;
+					setTimeout(()=>{
+						this.twoDigitFret=false;
+					},1000);
+				}
+				this.changeFret(fret);
+			}
 		}else if(key==8){
 			this.deleteSelected();
 		}else if(key>=37 && key<=40){//arrow key pressed
