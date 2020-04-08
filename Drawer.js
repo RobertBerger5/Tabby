@@ -182,11 +182,22 @@ class Drawer{
 		draw.appendChild(text);
 	}
 	drawRhythm(draw,x,y,duration,rest=false){
+		//console.log("draw "+duration);
 		//TODO: draw rests differently
 		const rx=2.5;
 		const ry=1.5;
 		const stroke=1.5;
 		const topOfLine=stroke*10;
+		if((Math.log2(duration)-Math.floor(Math.log2(duration))!=0)){
+			//duration isn't 2^n (leaving decimal places in log2), so it must be a dotted note (but that doesn't really work at the moment)
+			let dot=document.createElementNS("http://www.w3.org/2000/svg","circle");
+			dot.setAttribute("cx",x+7);
+			dot.setAttribute("cy",y);
+			dot.setAttribute("r",stroke);
+			dot.setAttribute("stroke","black");
+			dot.setAttribute("fill","black");
+			draw.appendChild(dot);
+		}
 		let note = document.createElementNS("http://www.w3.org/2000/svg","ellipse");
 		note.setAttribute("cx",x);
 		note.setAttribute("cy",y);
@@ -194,7 +205,7 @@ class Drawer{
 		note.setAttribute("ry",ry);
 		note.setAttribute("stroke-width",stroke);
 		note.setAttribute("stroke","black");
-		if(duration==1 || duration ==2){//fill halves and wholes with white
+		if(duration<=2){//fill halves and wholes with white
 			note.setAttribute("fill","white");
 			if(duration==1){//whole notes don't need more
 				draw.appendChild(note);

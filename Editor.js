@@ -185,7 +185,7 @@ class Editor{
 		//TODO: if I change a rhythm, sometimes it doesn't even realize that duration<beat.duration. how??
 		let measure=this.tab.measures[measureN].tracks[this.track];
 		let beat=measure[beatN];
-		//console.log("change measure "+measureN+", beat "+beatN+" from "+beat.duration+" to "+duration);
+		console.log("change measure "+measureN+", beat "+beatN+" from "+beat.duration+" to "+duration);
 		if(duration==beat.duration){
 			return;
 		}else if(beat.duration<duration){//new rhythm is smaller, just have to fill in the gap
@@ -206,7 +206,7 @@ class Editor{
 		}else{//new rhythm is bigger, delete notes to be overwritten, then fill in potential gap
 			//clear out notes to make space
 			let pave=(1/duration)-(1/beat.duration);
-			//console.log("space to be paved: "+pave);
+			console.log("space to be paved: "+pave);
 			/*pseudocode:
 				iterate through next notes, decreasing pave until it's (<= 0)
 					OR until we run out of notes in that measure (alert, return)
@@ -237,7 +237,7 @@ class Editor{
 					return;
 				}
 			}
-			//console.log("pave is now "+pave);
+			console.log("paved. pave is now "+pave);
 			//confirm (if allrests==false), then delete
 			if(!allRests && !confirm("Changing this rhythm will delete the next "+deleteNum+" notes")){
 				return;
