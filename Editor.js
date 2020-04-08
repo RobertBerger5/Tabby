@@ -182,19 +182,13 @@ class Editor{
 	}
 
 	changeRhythm(measureN,beatN,duration){
-		console.log(typeof duration);
 		//TODO: if I change a rhythm, sometimes it doesn't even realize that duration<beat.duration. how??
 		let measure=this.tab.measures[measureN].tracks[this.track];
 		let beat=measure[beatN];
-		console.log("change measure "+measureN+", beat "+beatN+" from "+beat.duration+" to "+duration);
+		//console.log("change measure "+measureN+", beat "+beatN+" from "+beat.duration+" to "+duration);
 		if(duration==beat.duration){
-			console.log(beat.duration+" == "+duration);
 			return;
 		}else if(beat.duration<duration){//new rhythm is smaller, just have to fill in the gap
-			console.log(beat.duration+" < "+duration);
-			if(beat.duration>duration){
-				console.log("WHAT");
-			}
 			let space=(1/beat.duration)-(1/duration);
 			//console.log("space to fill: "+space);
 			let biggest=(1/beat.duration)/2; //start with trying to fill it with the next smallest note
@@ -209,11 +203,7 @@ class Editor{
 				}
 			}
 			beat.duration=duration;
-		}else if(beat.duration>duration){//new rhythm is bigger, delete notes to be overwritten, then fill in potential gap
-			console.log(beat.duration+" > "+duration);
-			if(beat.duration<duration){
-				console.log("WHAT");
-			}
+		}else{//new rhythm is bigger, delete notes to be overwritten, then fill in potential gap
 			//clear out notes to make space
 			let pave=(1/duration)-(1/beat.duration);
 			//console.log("space to be paved: "+pave);
@@ -267,8 +257,6 @@ class Editor{
 					}
 				}
 			}
-		}else{
-			console.log("WHAT!!!!!");
 		}
 		//whatever happened before, the duration of the current note should've changed
 		//(unless we chickened out above and returned before deleting any notes)

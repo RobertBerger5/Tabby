@@ -4,7 +4,13 @@
 	width:100%;
 	margin:0px;
 	bottom:0px;
+	padding:10px;
 }
+
 body{
 	margin:0px;
+}
+
+#draw{
+	padding:10px;
 }

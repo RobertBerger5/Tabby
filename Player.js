@@ -11,29 +11,10 @@ class Player{
 		this.masterVolume.connect(this.context.destination);
 		this.amps=[];//different amp for each track
 		for(let i=0;i<tab.tracks.length;i++){
-			//each amp gets its own gain that connects to the master volume (where all tracks converge)
-			let gain=this.context.createGain();
-			gain.value=1;
-			gain.connect(this.masterVolume);
-			//each amp should have its own compressor that keeps its volume in check
-			let comp=this.context.createDynamicsCompressor();
-			comp.threshold.value=-100;
-			comp.knee.value=40;
-			comp.ratio.value=20;
-			comp.attack.value=0.0;
-			comp.release.value=0.1;
-			//connect to the track's volume knob
-			comp.connect(gain);
-			//each note connects to their respective track's input node, where its voicing is different depending on its "voicing" (distorted guitar, bass, etc.)
-			let input=this.getInput(tab.tracks[i].voice,comp);
-			this.amps[i]={
-				comp:comp, //not sure I need to give access to the compressor, but it can't hurt atm
-				volume:gain,
-				input:input
-			}
+			//each dynamically played note connects to their respective track's input node, where its voicing is different depending on its "voicing" (distorted guitar, picked/unpicked bass, french horn or whatever (probably won't add that, though) etc.)
+			//returns an object with input and volume channels to control it
+			this.amps[i]=this.getInput(tab.tracks[i].voice,this.masterVolume);
 		}
-		//TODO: every track gets its own channel to play through
-		//because each note doesn't get its own fucking amplifier, they all go through the same one. idiot.
 
 		//some constant vars
 		this.mute=.05;
@@ -113,14 +94,13 @@ class Player{
 				sound.volume.gain.linearRampToValueAtTime(
 					this.mute,this.context.currentTime+this.release
 				);
-				sound.note.stop(this.context.currentTime+this.release);
+				sound.note.stop(this.context.currentTime+this.release+.01);
 			}
 		}
 	}
 
 	//TODO: rewrite playTrackMeasure and this to have them play at the same times, not nanoseconds off. AudioContext has ways of dealing with that, you don't need to be able to edit the notes of the current measure. That'll sound fine I think
 	getSound(trackN,stringN,fret){
-		//TODO: somehow have attacks and releases to make it sound more like a guitar
 		let note=this.context.createOscillator();
 		note.type="sine";
 		note.frequency.value=this.getFrequency(this.tab.tracks[trackN].strings[stringN],fret);
@@ -145,20 +125,47 @@ class Player{
 		return this.frequencies[retNote+retOctave];
 	}
 
-	//each track its own input, which connect to their own compressors, which then all connect to a master volume control, that finally connects to this.context.destination (the user's speakers)
+	//each track its own input (and a compressor), which connect to the track's volume control, which all connect to a master volume control, that finally connects to this.context.destination (the user's speakers)
 	getInput(voice,output){
-		let input;
-		switch(voice){
+		//each amp gets its own volume control
+		let volume=this.context.createGain();
+		volume.gain.value=1;
+		//connect to whatever the output is (should be the master volume knob)
+		volume.connect(output);
+		//each track has its own compressor to keep its volume in check
+		let comp=this.context.createDynamicsCompressor();
+		comp.threshold.value=-30;
+		comp.knee.value=10;
+		comp.ratio.value=20;
+		comp.attack.value=0.0;
+		comp.release.value=0.1;
+		//connect to the track's volume knob
+		comp.connect(volume);
+
+		//whatever this happens to be, dynamically created notes in a track will go through it to get to the speakers
+		let input=this.context.createAnalyser();
+		//(input) -> comp --> volume -> masterVolume -> speakers
+		switch(voice){ //different sounds for different voices
 			case "guitar_distort":
-				input=this.context.createWaveShaper();
-				input.curve=makeDistortionCurve(200);
-				input.oversample='4x';
-				input.connect(output);
+				volume.gain.value=.25;
+				//console.log("distorted guitar");
+				let distort=this.context.createWaveShaper();
+				distort.curve=makeDistortionCurve(200);
+				distort.oversample='4x';
+				input.connect(distort);
+				//eq=this.context.createBiquadFilterNode();
+				//TODO: final thing connects to comp
+				distort.connect(comp);
 				break;
 			default:
-				input=this.context.createAnalyser();
+				volume.gain.value=1;
+				input.connect(comp);
 		}
-		return input;
+
+		return{ //return inupt so we can send signals through it, and volume so we can change the volume later if desired. Everything else shouldn't need to be changed
+			input:input,
+			volume:volume
+		};
 	}
 }
 
