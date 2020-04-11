@@ -128,17 +128,18 @@ class Player{
 	//each track its own input (and a compressor), which connect to the track's volume control, which all connect to a master volume control, that finally connects to this.context.destination (the user's speakers)
 	getInput(voice,output){
 		//each amp gets its own volume control
-		let volume=this.context.createGain();
+		let volume=this.context.createGain(); //factory method
 		volume.gain.value=1;
 		//connect to whatever the output is (should be the master volume knob)
 		volume.connect(output);
 		//each track has its own compressor to keep its volume in check
-		let comp=this.context.createDynamicsCompressor();
-		comp.threshold.value=-30;
-		comp.knee.value=10;
-		comp.ratio.value=20;
-		comp.attack.value=0.0;
-		comp.release.value=0.1;
+		let comp=new DynamicsCompressorNode(this.context,{//constructor method
+			threshhold:-30,
+			knee:10,
+			ratio:20,
+			attack:0.0,
+			release:.1
+		});
 		//connect to the track's volume knob
 		comp.connect(volume);
 
@@ -148,14 +149,38 @@ class Player{
 		switch(voice){ //different sounds for different voices
 			case "guitar_distort":
 				volume.gain.value=.25;
-				//console.log("distorted guitar");
-				let distort=this.context.createWaveShaper();
-				distort.curve=makeDistortionCurve(200);
-				distort.oversample='4x';
+				let lessBass=new BiquadFilterNode(this.context,{
+					type:"lowshelf",
+					frequency:300,
+					gain:-5
+				});
+				let moreHigh=new BiquadFilterNode(this.context,{
+					type:"highshelf", //anything above frequency is multiplied by gain
+					frequency:5000,
+					gain:5
+				});
+				let noTop=new BiquadFilterNode(this.context,{
+					type:"lowpass",
+					frequency:10000,
+					Q:1,
+				});
+				let distort=new WaveShaperNode(this.context,{
+					curve:makeDistortionCurve(50),
+					oversample:'4x'
+				});
+				let midcut=new BiquadFilterNode(this.context,{
+					type:"peaking",
+					frequency:1000,
+					Q:.9,
+					gain:-5
+				});
+
 				input.connect(distort);
-				//eq=this.context.createBiquadFilterNode();
-				//TODO: final thing connects to comp
-				distort.connect(comp);
+				distort.connect(noTop);
+				noTop.connect(lessBass);
+				lessBass.connect(moreHigh);
+				moreHigh.connect(midcut);
+				midcut.connect(comp);
 				break;
 			default:
 				volume.gain.value=1;
