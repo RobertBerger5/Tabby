@@ -79,7 +79,11 @@ class Editor{
 				}
 				this.changeFret(fret);
 			}
-		}else if(key==8){
+		}else{
+			this.twoDigitFret=false;
+		}
+		
+		if(key==8){
 			this.deleteSelected();
 		}else if(key>=37 && key<=40){//arrow key pressed
 			if(this.selected==null){
@@ -188,6 +192,7 @@ class Editor{
 		this.tab.measures[measureN].timeN=timeN;
 		this.clearTrackMeasure(this.tab.measures[measureN],this.track);
 	}
+	//TODO: these don't clear other tracks as well.
 	changeTimeD(measureN,timeD){
 		this.tab.measures[measureN].timeD=timeD;
 		this.clearTrackMeasure(this.tab.measures[measureN],this.track);
