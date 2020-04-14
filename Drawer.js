@@ -8,7 +8,7 @@ class Drawer{
 		//console.log(this.windowWidth);
 
 		this.noteWidth=30;
-		this.noteHeight=15;
+		this.noteHeight=15; //should stay consistant with what's in tab.css
 
 		this.selectionDummy=null; //current selection dummy, so it can persist through all the times we re-render the document
 	}
@@ -24,17 +24,9 @@ class Drawer{
 		draw end of measure
 	*/
 	drawTab(selectedTrack){
-		//TODO: more elegant way of removing all inner elements
-		//const selector=document.getElementById("selector");
+		//TODO: more elegant way of removing all inner elements and only redraw what's needed?
 		this.window.innerHTML="";
-		/*if(selector!=null){
-			this.window.appendChild(selector);
-		}*/
-
-		//some constant vars to keep everything in line
-		//const selectedTrack=trackN;
-		//const noteWidth=30;
-		//const noteHeight=15; //should stay consistant with what's in tab.css
+		
 		//keep track so we know to redraw when these change, start them off at impossible values that we'll have to redraw to start with
 		let currTimeN=-1;
 		let currTimeD=-1;
@@ -84,8 +76,6 @@ class Drawer{
 				this.drawRhythm(this.window,xStart+this.noteWidth*2/3,yStart+10,beat.duration,beat.notes.length==0);
 				yStart-=this.noteHeight*stringN; //reset drawhead to top string
 				for(const note of beat.notes){ //draw all notes
-					//TODO: come up with a way to get unique id's for all of em?
-					//let id="["+iMeasure+","+iBeat+","+note.string+"]";
 					this.drawFret(this.window,xStart+this.noteWidth/2,yStart+note.string*this.noteHeight+this.noteHeight/3,note.fret);//draw fret number on correct string
 				}
 				for(let i=0;i<stringN;i++){
@@ -100,7 +90,7 @@ class Drawer{
 			//new measure line
 			this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*this.noteHeight);
 			//carriage return if it's getting too far to the right
-			if(xStart>=this.windowWidth-300){//TODO: check if next measure would run over or not
+			if(xStart>=this.windowWidth-300){//TODO: delete what we have of the measure so far and go onto a newline, then redraw measures after that point (assumes we have a method for redrawing after a certain measure, which I should work on above)
 				xStart=0;
 				yStart+=this.noteHeight*stringN*2;
 				this.drawLine(this.window,xStart,yStart,xStart,yStart+(stringN-1)*this.noteHeight);
@@ -172,30 +162,33 @@ class Drawer{
 		text.setAttribute("y",y-charHeight/3);
 		text.textContent=num;
 		text.setAttribute("class","timeS");
-		//text.setAttribute("onclick","changeTimeN()"); TODO: click to change signature for that measure
 		draw.appendChild(text);
 		text=document.createElementNS("http://www.w3.org/2000/svg","text");
 		text.setAttribute("x",x);
 		text.setAttribute("y",y+charHeight/3);
 		text.textContent=denom;
-		text.setAttribute("class","timeS");//TODO, also draw denominator
+		text.setAttribute("class","timeS");
 		draw.appendChild(text);
 	}
 	drawRhythm(draw,x,y,duration,rest=false){
 		//console.log("draw "+duration);
-		//TODO: draw rests differently
 		const rx=2.5;
 		const ry=1.5;
 		const stroke=1.5;
 		const topOfLine=stroke*10;
+		
+		//draw grey if rest, otherwise solid black
+		let fill=rest? "#666" : "#000";
+
+		//for dotted notes, which were buggy so I removed them for now
 		if((Math.log2(duration)-Math.floor(Math.log2(duration))!=0)){
 			//duration isn't 2^n (leaving decimal places in log2), so it must be a dotted note (but that doesn't really work at the moment)
 			let dot=document.createElementNS("http://www.w3.org/2000/svg","circle");
 			dot.setAttribute("cx",x+7);
 			dot.setAttribute("cy",y);
 			dot.setAttribute("r",stroke);
-			dot.setAttribute("stroke","black");
-			dot.setAttribute("fill","black");
+			dot.setAttribute("stroke",fill);
+			dot.setAttribute("fill",fill);
 			draw.appendChild(dot);
 		}
 		let note = document.createElementNS("http://www.w3.org/2000/svg","ellipse");
@@ -204,13 +197,15 @@ class Drawer{
 		note.setAttribute("rx",rx);
 		note.setAttribute("ry",ry);
 		note.setAttribute("stroke-width",stroke);
-		note.setAttribute("stroke","black");
+		note.setAttribute("stroke",fill);
 		if(duration<=2){//fill halves and wholes with white
 			note.setAttribute("fill","white");
 			if(duration==1){//whole notes don't need more
 				draw.appendChild(note);
 				return;
 			}
+		}else{
+			note.setAttribute("fill",fill); //TODO: fill not working properly
 		}
 		//vertical line on everything but whole notes
 		let line=document.createElementNS("http://www.w3.org/2000/svg","line");
@@ -219,7 +214,7 @@ class Drawer{
 		line.setAttribute("x2",x+rx);
 		line.setAttribute("y2",y-topOfLine);
 		line.setAttribute("stroke-width",stroke);
-		line.setAttribute("stroke","black");
+		line.setAttribute("stroke",fill);
 		draw.appendChild(line);
 		draw.appendChild(note);
 		//for(let i=duration;i<=0;i++){//lazy coding, wanna add lines to non-quarter notes
@@ -232,7 +227,7 @@ class Drawer{
 			//squiggles were annoying to look at, and so was the code for them.
 			//line=document.createElementNS("http://www.w3.org/2000/svg","path");
 			//line.setAttribute("d","m"+(x+rx)+","+(y-topOfLine+i*ry*-1.25)+"c2,-2 4,2 6,0 l0,1 c-2,2 -4,-2 -6,0 l0,-1z");
-			line.setAttribute("stroke","black");
+			line.setAttribute("stroke",fill);
 			line.setAttribute("stroke-width",stroke);
 			draw.appendChild(line);
 		}

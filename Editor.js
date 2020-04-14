@@ -8,7 +8,7 @@ class Editor{
 		this.twoDigitFret=false; //flag to see if the user's trying to enter two digits
 		this.firstDigit=null;//goes with this.twoDigitFret, the first digit the user entered
 	}
-	select(newSelect){ //TODO: rewrite handleKey to use this function, then update the noteDurations radio input to whatever the duration of the newly selected note is
+	select(newSelect){ //TODO: rewrite handleKey to use this function, then update the noteDurations buttons to whatever the duration of the newly selected note is
 		this.selected=newSelect;
 		this.twoDigitFret=false;
 	}
@@ -61,16 +61,16 @@ class Editor{
 
 	handleKey(key){
 		//console.log("Editor will handle keypress "+key);
-		if(key>=48 && key<=57){ //TODO: = key is 187, use for holds?
+		if(key>=48 && key<=57){
 			//number key pressed
 			let fret=key-48;
 			if(this.twoDigitFret){
-				console.log("second digit: "+fret);
+				//console.log("second digit: "+fret);
 				this.changeFret((this.firstDigit*10)+fret);
 				this.twoDigitFret=false;
 			}else{
 				if(fret==1 || fret ==2){
-					console.log("first digit: "+fret);
+					//console.log("first digit: "+fret);
 					this.twoDigitFret=true;
 					this.firstDigit=fret;
 					setTimeout(()=>{
@@ -79,11 +79,14 @@ class Editor{
 				}
 				this.changeFret(fret);
 			}
+			player.playSingleSound(this.track,this.string(),fret);
 		}else{
 			this.twoDigitFret=false;
 		}
 		
-		if(key==8){
+		if(key==187){
+			this.changeFret('=');
+		}else if(key==8){
 			this.deleteSelected();
 		}else if(key>=37 && key<=40){//arrow key pressed
 			if(this.selected==null){
@@ -127,7 +130,7 @@ class Editor{
 			}
 
 		}else{
-			console.log("Editor: no defined behavior for key "+key);
+			//console.log("Editor: no defined behavior for key "+key);
 		}
 	}
 
@@ -163,7 +166,7 @@ class Editor{
 
 	addMeasure(){
 		let m={};
-		console.log(this.tab.measures.length);
+		//console.log(this.tab.measures.length);
 		const currM=(this.selected==null)? this.tab.measures[this.tab.measures.length-1] : this.tab.measures[this.measure()];
 		m.timeN=currM.timeN;
 		m.timeD=currM.timeD;
@@ -205,7 +208,7 @@ class Editor{
 		//TODO: if I change a rhythm, sometimes it doesn't even realize that duration<beat.duration. how??
 		let measure=this.tab.measures[measureN].tracks[this.track];
 		let beat=measure[beatN];
-		console.log("change measure "+measureN+", beat "+beatN+" from "+beat.duration+" to "+duration);
+		//console.log("change measure "+measureN+", beat "+beatN+" from "+beat.duration+" to "+duration);
 		if(duration==beat.duration){
 			return;
 		}else if(beat.duration<duration){//new rhythm is smaller, just have to fill in the gap
@@ -226,7 +229,7 @@ class Editor{
 		}else{//new rhythm is bigger, delete notes to be overwritten, then fill in potential gap
 			//clear out notes to make space
 			let pave=(1/duration)-(1/beat.duration);
-			console.log("space to be paved: "+pave);
+			//console.log("space to be paved: "+pave);
 			/*pseudocode:
 				iterate through next notes, decreasing pave until it's (<= 0)
 					OR until we run out of notes in that measure (alert, return)
@@ -257,7 +260,7 @@ class Editor{
 					return;
 				}
 			}
-			console.log("paved. pave is now "+pave);
+			//console.log("paved. pave is now "+pave);
 			//confirm (if allrests==false), then delete
 			if(!allRests && !confirm("Changing this rhythm will delete the next "+deleteNum+" notes")){
 				return;

@@ -91,5 +91,6 @@ function changeRhythm(rhythm){
 }
 
 function showJSON(){
+	//replace quotes with double slashes
 	console.log(JSON.stringify(tab).replace(/\"/g,"\\\""));
 }

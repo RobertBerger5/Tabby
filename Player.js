@@ -1,5 +1,5 @@
 class Player {
-	//TODO: add a way to play a single note when the user types it in
+	//TODO: why does chrome still say audio is playing at the top? all notes should've been stopped.
 	constructor(tab) {
 		this.tab = tab;
 		this.playing = false;
@@ -33,6 +33,8 @@ class Player {
 		this.release = .02;
 
 		this.notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']; //so we can iterate through em to find the right pitches
+		
+		//TODO: read from file, this is gross
 		this.frequencies = { //all frequencies of every possible note, courtesy of https://gist.github.com/marcgg/94e97def0e8694f906443ed5262e9cbb
 			'C0': 16.35, 'C#0': 17.32, 'Db0': 17.32, 'D0': 18.35, 'D#0': 19.45, 'Eb0': 19.45, 'E0': 20.60, 'F0': 21.83, 'F#0': 23.12, 'Gb0': 23.12, 'G0': 24.50, 'G#0': 25.96, 'Ab0': 25.96, 'A0': 27.50, 'A#0': 29.14, 'Bb0': 29.14, 'B0': 30.87,
 			'C1': 32.70, 'C#1': 34.65, 'Db1': 34.65, 'D1': 36.71, 'D#1': 38.89, 'Eb1': 38.89, 'E1': 41.20, 'F1': 43.65, 'F#1': 46.25, 'Gb1': 46.25, 'G1': 49.00, 'G#1': 51.91, 'Ab1': 51.91, 'A1': 55.00, 'A#1': 58.27, 'Bb1': 58.27, 'B1': 61.74,
@@ -58,7 +60,7 @@ class Player {
 			}
 			const measure = this.tab.measures[measureN];
 			for (let trackN = 0; trackN < measure.tracks.length; trackN++) {
-				new Promise(() => this.playTrackMeasure(trackN, measure));
+				new Promise(() => this.playTrackMeasure(trackN, measureN));
 			}
 			const beat = 60 / measure.tempo;
 			const duration = measure.timeN * beat;
@@ -68,18 +70,26 @@ class Player {
 		this.playing = false;
 	}
 	//each track plays this measure in parallel (to make sure they never get too out of sync)
-	async playTrackMeasure(trackN, measure) {
+	async playTrackMeasure(trackN, measureN) {
+		const measure=this.tab.measures[measureN];
 		//TODO: different volumes for each track?
 		//console.log("playing measure from track "+trackN);
-		const track = this.tab.tracks[trackN];
+		const track = measure.tracks[trackN];
 		const beat = 60 / measure.tempo; //this many seconds for each note
 		let startTime = 0;//running count of which second we're on
-		for (const note of measure.tracks[trackN]) {
+		
+		for(let noteN=0;noteN<track.length;noteN++){
+		//for (const note of measure.tracks[trackN]) {
+			const note=track[noteN];
 			//set up all notes to be played
 			let sounds = [];
 			for (const pitch of note.notes) {
-				let sound = this.getSound(trackN, pitch.string, pitch.fret);
-				sounds.push(sound);
+				if(Number.isInteger(pitch.fret)){
+					let sound = this.getSound(trackN, pitch.string, pitch.fret);
+					sounds.push(sound);
+				}else{ //as of now, the only other thing that could've been placed there is '=' for a hold
+					//console.log('non-integer fret found');
+				}
 			}
 
 			//beat=60/tempo		that many seconds for each note of duration timeD
@@ -88,24 +98,29 @@ class Player {
 			//beat is 60/120, so each quarter note gets .5 seconds
 			//an 8th note is played ((4/8)*.5)=.25 seconds
 			const duration = (measure.timeD / note.duration) * beat;
+			//const duration=this.getDuration(measureN,trackN,noteN);
 
-			//start them at the same time
+			//set start/stop times for all sounds
 			for (let sound of sounds) {
-				sound.note.start();
-				sound.volume.gain.setValueAtTime(0, this.context.currentTime + startTime);//start at 0
-				sound.volume.gain.linearRampToValueAtTime(1, this.context.currentTime + startTime + this.attack);//then ramp to volume
-				//palm muting is all attack, so tone the non-attack parts waaay down when I add that decoration
-				sound.volume.gain.exponentialRampToValueAtTime(.75, this.context.currentTime + startTime + this.decay);
-
-				sound.volume.gain.setValueAtTime(.75,this.context.currentTime + startTime + duration - this.release);
-				sound.volume.gain.linearRampToValueAtTime(this.mute, this.context.currentTime + startTime + duration);//then be quiet
-				sound.note.stop(this.context.currentTime + startTime + duration + .01);//then cut note off entirely
+				this.setSound(sound,startTime,duration);
 			}
 			startTime += duration;
 		}
 	}
 
-	//TODO: rewrite playTrackMeasure and this to have them play at the same times, not nanoseconds off. AudioContext has ways of dealing with that, you don't need to be able to edit the notes of the current measure. That'll sound fine I think
+	//set a sound to play with correct volume envelope
+	setSound(sound,startTime,duration){
+		sound.note.start();
+		sound.volume.gain.setValueAtTime(0, this.context.currentTime + startTime);//start at 0
+		sound.volume.gain.linearRampToValueAtTime(1, this.context.currentTime + startTime + this.attack);//then ramp to volume
+		//palm muting is all attack, so tone the non-attack parts waaay down when I add that decoration
+		sound.volume.gain.exponentialRampToValueAtTime(.75, this.context.currentTime + startTime + this.decay);
+
+		sound.volume.gain.setValueAtTime(.75,this.context.currentTime + startTime + duration - this.release);
+		sound.volume.gain.linearRampToValueAtTime(this.mute, this.context.currentTime + startTime + duration);//then be quiet
+		sound.note.stop(this.context.currentTime + startTime + duration + .01);//then cut note off entirely
+	}
+
 	getSound(trackN, stringN, fret) {
 		let note = this.context.createOscillator();
 		note.setPeriodicWave(this.stringWave);//note just a sine wave, but has overtones
@@ -113,7 +128,7 @@ class Player {
 		let volume = this.context.createGain();
 		volume.gain.value = 0;
 		note.connect(volume);
-		console.log(this.amps);
+		//console.log(this.amps);
 		volume.connect(this.amps[trackN].input);
 		return {
 			note: note,
@@ -154,9 +169,9 @@ class Player {
 		//(input) -> comp --> volume -> masterVolume -> speakers
 		switch (voice) { //different sounds for different voices
 			case "guitar_distort":
-				volume.gain.value = .4;
+				volume.gain.value = .5;
 				let distort = new WaveShaperNode(this.context, {
-					curve: makeDistortionCurve(50),
+					curve: makeDistortionCurve(100),
 					oversample: '4x'
 				});
 				/*let noTop=new BiquadFilterNode(this.context,{
@@ -191,12 +206,7 @@ class Player {
 				//distort.connect(comp);
 				break;
 			case "bass_picked":
-				let real = new Float32Array(2);
-				let imag = new Float32Array(2);
-				real[0] = 0;
-				imag[0] = 0;
-				real[1] = 1;
-				imag[1] = 0;
+				volume.gain.value=.5;
 				input.connect(comp);
 			default:
 				volume.gain.value = .5;
@@ -207,6 +217,49 @@ class Player {
 			input: input,
 			volume: volume
 		};
+	}
+
+	//tried to get holds to work, but they're tricky
+	/*getDuration(measureN,trackN,noteN){
+		console.log('track '+trackN);
+		let measure=this.tab.measures[measureN];
+		let note=measure.tracks[trackN][noteN];
+		let beat=60/measure.tempo;
+		let totalDuration=0;
+		do{
+			//beat=60/tempo because there's that many seconds for each note of duration timeD
+			//so each note is played for ((timeD/noteDuration)*beat) seconds
+			//example: 8th notes are played for .25 seconds in 4/4 at 120 bpm
+			//beat is 60/120, so each quarter note gets .5 seconds
+			//an 8th note is played ((4/8)*.5)=.25 seconds
+			const duration = (measure.timeD / note.duration) * beat;
+			totalDuration++;
+			console.log('add '+duration);
+
+			//prepare to look at next note
+			noteN++;
+			if(noteN == measure.tracks[trackN].length){
+				//onto the next measure
+				measureN++;
+				if(measureN==this.tab.measures.length){
+					//at very last note in tab
+					console.log("end of song");
+					break;
+				}
+				noteN=0;
+				measure=this.tab.measures[measureN];
+				beat=60/measure.tempo;
+			}
+			note=measure.tracks[trackN][noteN];
+		}while(note.notes[0].fret=='=');
+		console.log(note);
+		console.log('total duration: '+totalDuration);
+		return totalDuration;
+	}*/
+
+	playSingleSound(trackN,stringN,fret){
+		let sound=this.getSound(trackN,stringN,fret);
+		this.setSound(sound,0,.25);
 	}
 }
 
