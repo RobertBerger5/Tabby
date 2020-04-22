@@ -8,7 +8,7 @@ services:
     image: mariadb
     #TODO: create needed tables from .sql file on build?
     #https://stackoverflow.com/questions/52074643/how-to-populate-a-mariadb-in-an-docker-container
-    container_name: tabit_db
+    container_name: tabby_db
     restart: always
     networks:
       - backend
@@ -19,16 +19,16 @@ services:
       MYSQL_ROOT_PASSWORD: supersecretpasswordhere
       MYSQL_USER: tab_admin
       MYSQL_PASSWORD: controllerofthetabs
-      MYSQL_DATABASE: tabit
+      MYSQL_DATABASE: tabby
     ports:
       - 3306:3306
-    #to run a command: docker exec -it tabit_db mysql -uroot -p
+    #to run a command: docker exec -it tabby_db mysql -uroot -p
   
   php-apache:
     hostname: apacheContainer
     build:
       context: ./docker-php-apache
-    container_name: tabit_web
+    container_name: tabby_web
     networks:
       - backend
       - frontend
@@ -42,7 +42,7 @@ services:
   phpmyadmin:
     hostname: phpMyAdminContainer
     image: phpmyadmin/phpmyadmin
-    container_name: tabit_admin
+    container_name: tabby_admin
     environment: 
       MYSQL_ROOT_PASSWORD: supersecretpasswordhere
 #      MYSQL_USER: tab_admin
