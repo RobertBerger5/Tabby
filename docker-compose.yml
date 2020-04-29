@@ -3,18 +3,17 @@
 version: "3"
 
 services:
+  #to run a command: docker exec -it tabby_db mysql -uroot -p
   db:
     hostname: dbContainer
     image: mariadb
-    #TODO: create needed tables from .sql file on build?
-    #https://stackoverflow.com/questions/52074643/how-to-populate-a-mariadb-in-an-docker-container
     container_name: tabby_db
     restart: always
     networks:
       - backend
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_520_ci
-    volumes: #have a docker volume just for kicks
-      - mariadb:/var/lib/mysql
+    volumes:
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     environment:
       MYSQL_ROOT_PASSWORD: supersecretpasswordhere
       MYSQL_USER: tab_admin
@@ -22,8 +21,7 @@ services:
       MYSQL_DATABASE: tabby
     ports:
       - 3306:3306
-    #to run a command: docker exec -it tabby_db mysql -uroot -p
-  
+
   php-apache:
     hostname: apacheContainer
     build:
@@ -38,15 +36,15 @@ services:
       - ./DocumentRoot:/var/www/html
     ports:
       - 80:80
-  
+
   phpmyadmin:
     hostname: phpMyAdminContainer
     image: phpmyadmin/phpmyadmin
     container_name: tabby_admin
-    environment: 
-      MYSQL_ROOT_PASSWORD: supersecretpasswordhere
-#      MYSQL_USER: tab_admin
-#      MYSQL_PASSWORD: controllerofthetabs
+    #environment:
+    #  MYSQL_ROOT_PASSWORD: supersecretpasswordhere
+    #      MYSQL_USER: tab_admin
+    #      MYSQL_PASSWORD: controllerofthetabs
     networks:
       - backend
       - frontend
@@ -56,9 +54,6 @@ services:
       - db
     ports:
       - 8080:80
-
-volumes:
-  mariadb:
 
 networks:
   backend:
