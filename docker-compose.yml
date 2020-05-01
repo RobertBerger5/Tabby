@@ -25,7 +25,7 @@ services:
   php-apache:
     hostname: apacheContainer
     build:
-      context: ./docker-php-apache
+      context: ./php-apache-build
     container_name: tabby_web
     networks:
       - backend
