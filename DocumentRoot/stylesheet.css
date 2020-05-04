@@ -1,0 +1,39 @@
+.header{
+	height:20vh;
+}
+
+.sidebarWrapper{
+	height:80vh;
+	display:flex;
+	width:100%;
+	align-items: stretch;
+	overflow:scroll;
+}
+#sidebar{
+	width:175px;
+	position:fixed;
+	top:20vh;
+	left:0px;
+	height:100%;
+	z-index:10000;/*why does bootstrap have such large z-indexes*/
+	transition: all .5s;
+	display:flex;
+	background-color:#aaa
+}
+#sidebarCollapse{
+	width:25px;
+	background-color: #666;
+	height:100%;
+}
+#sidebarContent{
+	float:left;
+	height:100%;
+	width:150px;
+}
+#sidebar.active{
+	margin-left:-150px;
+}
+#nonSidebarContent{
+	margin-left:25px;
+	height:100%
+}
