@@ -11,3 +11,7 @@ th,td{
 	overflow:hidden;
 }
 
+#descCheckbox{
+	display: inline-block;
+	font-size:1rem;
+}

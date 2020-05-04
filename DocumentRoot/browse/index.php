@@ -2,17 +2,20 @@
 	$pdo = new PDO('mysql:host=db;dbname=tabby;charset=utf8', 'tab_admin', 'controllerofthetabs');
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$loaded_tabs=$pdo->query('SELECT * FROM tabs')->fetchAll(PDO::FETCH_ASSOC);
-	//var_dump($loaded_tabs);
-	//foreach($loaded_tabs as $row){
+	$loaded_tabs=$pdo->query('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id')->fetchAll(PDO::FETCH_ASSOC);
+
 	for($i=0;$i<count($loaded_tabs);$i++){
-		//$tags=$pdo->query('SELECT tag FROM tags WHERE tab= '.$loaded_tabs[$i]['id'])->fetchAll(PDO::FETCH_NUM);
 		$stmt=$pdo->prepare('SELECT tag FROM tags WHERE tab= ?');
 		$stmt->execute([$loaded_tabs[$i]['id']]);
 		$tags=$stmt->fetchAll(PDO::FETCH_NUM);
+		//TODO: clean this up? right now tags is like [["one"],["two"]]
 		$loaded_tabs[$i]['tags']=$tags;
+
+		$stmt=$pdo->prepare('SELECT COUNT(*) FROM likes WHERE tab=?');
+		$stmt->execute([$loaded_tabs[$i]['id']]);
+		$likes=$stmt->fetchAll(PDO::FETCH_NUM);
+		$loaded_tabs[$i]['likes']=$likes[0][0];
 	}
-	//var_dump($loaded_tabs[0]['tags']);
 ?>
 
 <!doctype html>
@@ -51,9 +54,14 @@
 	//load in tabs from server, fetched above
 	var loadedTabs = JSON.parse('<?php echo json_encode($loaded_tabs) ?>');
 	</script>
-	<div class="header">
+	<?php
+		$doc=new DOMDocument();
+		$doc->loadHTMLFile("../header.html");
+		echo $doc->saveHTML();
+	?>
+	<!--<div class="header">
 		<p>howdy pardner</p>
-	</div>
+	</div>-->
 	<!--https://bootstrapious.com/p/bootstrap-sidebar-->
 	<div class="sidebarWrapper">
 		<nav id="sidebar" class="active">
@@ -68,16 +76,19 @@
 			<div id="sidebarCollapse" />
 		</nav>
 		<div id="nonSidebarContent" class="overflow-auto">
-			<h3>Sort by <select class="form-select" id="sortBy">
-					<option selected value="title">Title</option>
+			<h3>Sort by <select class="form-select" id="sortBy" onchange="sortTabs()">
+					<option value="title" selected>Title</option>
 					<option value="owner">Owner</option>
 					<option value="likes">Likes</option>
-				</select>, find <input type="search" /></h3>
+				</select>
+				<span id="descCheckbox">(reverse? 
+					<input type="checkbox" id="descending" onchange="sortTabs()">)</span><!--, find <input type="search" onchange="searchTabs(this.value)"/>-->
+			</h3>
 			<table class="table table-hover table-striped">
 				<thead>
 					<tr>
 						<th width="50px" scope="col">#</th>
-						<th width="auto" scope="col">Title - Author #tags</th>
+						<th width="auto" scope="col">Title - Owner #tags</th>
 						<th width="50px" scope="col">*'s</th>
 					</tr>
 				</thead>

@@ -22,13 +22,14 @@ CREATE TABLE IF NOT EXISTS tabs (
 CREATE TABLE IF NOT EXISTS tags (
 	tab INT NOT NULL,
 	tag VARCHAR(15), /*shouldn't have tags longer than 15 chars*/
-	CONSTRAINT double_tag UNIQUE (tab,tag),
+	CONSTRAINT no_duplicate_tag UNIQUE (tab,tag),
 	FOREIGN KEY (tab) REFERENCES tabs(id)
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS likes (
 	tab INT NOT NULL,
 	user INT NOT NULL,
+	CONSTRAINT one_like_per_user UNIQUE (tab,user),
 	FOREIGN KEY (tab) REFERENCES tabs(id),
 	FOREIGN KEY (user) REFERENCES users(id)
 ) ENGINE=INNODB;

@@ -1,5 +1,15 @@
 .header{
 	height:20vh;
+	background-color:#f90;
+}
+.header img{
+	position:fixed;
+	height:18vh;
+	top:1vh;
+	left:5px;
+}
+.header h1{
+	color:#000;
 }
 
 .sidebarWrapper{
@@ -16,13 +26,13 @@
 	left:0px;
 	height:100%;
 	z-index:10000;/*why does bootstrap have such large z-indexes*/
-	transition: all .5s;
+	transition: all .25s;
 	display:flex;
-	background-color:#aaa
+	background-color:#aaf;
 }
 #sidebarCollapse{
 	width:25px;
-	background-color: #666;
+	background-color: #00a;
 	height:100%;
 }
 #sidebarContent{
