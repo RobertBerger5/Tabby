@@ -1,0 +1,61 @@
+#drawDiv{
+	height:60vh;
+	width:100%;
+	padding:10px;
+	overflow: scroll;
+}
+
+#userInterface{
+	height:30vh;
+	width:100%;
+	background-color:#aaa;
+	margin:0px;
+	padding:0px;
+	overflow-x:hidden;
+	overflow-y:hidden;
+}
+#userInterface div{
+	height:100%;
+	float:left;
+	margin:0px;
+	padding:10px;
+	border:1px solid black;
+	border-right:0px;
+}
+#ui-durations{
+	width:25vw;
+}
+#ui-durations button{
+	height:25%;
+	width:50%;
+	float:left;
+}
+#ui-measure-info{
+	width: 30vw;
+}
+#ui-measure-buttons{
+	padding:0px;
+	width:40vw;
+}
+#ui-measure-buttons *{
+	width:49%;
+	height:33%;
+}
+#ui-track-panel{
+	position:absolute;
+	bottom:0px;
+	left: 95vw;
+	height:30vh !important;
+	width:100vw;
+	padding:0px !important;
+	transition: left .5s;
+	background-color:#0f0;
+}
+.active{
+	left:0px !important;
+}
+#ui-track-collapse{
+	height:100%;
+	width:5vw;
+	background-color:#f00;
+}

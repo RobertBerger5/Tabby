@@ -27,6 +27,7 @@ services:
     build:
       context: ./php-apache-build
     container_name: tabby_web
+    restart: always
     networks:
       - backend
       - frontend
@@ -41,6 +42,7 @@ services:
     hostname: phpMyAdminContainer
     image: phpmyadmin/phpmyadmin
     container_name: tabby_admin
+    restart: always
     #environment:
     #  MYSQL_ROOT_PASSWORD: supersecretpasswordhere
     #      MYSQL_USER: tab_admin

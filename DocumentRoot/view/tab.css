@@ -1,3 +1,8 @@
+/*mostly just affects the string lines*/
+line{
+	stroke:black;
+	stroke-width:1.5;
+}
 .fret{
 	fill:black;
 	font: bold 15px sans-serif;

@@ -1,10 +1,14 @@
+body{
+	overflow:hidden;
+}
+
 .header{
-	height:20vh;
+	height:10vh;
 	background-color:#f90;
 }
 .header img{
 	position:fixed;
-	height:18vh;
+	height:8vh;
 	top:1vh;
 	left:5px;
 }
@@ -13,7 +17,7 @@
 }
 
 .sidebarWrapper{
-	height:80vh;
+	height:90vh;
 	display:flex;
 	width:100%;
 	align-items: stretch;
@@ -22,11 +26,11 @@
 #sidebar{
 	width:175px;
 	position:fixed;
-	top:20vh;
+	top:10vh;
 	left:0px;
 	height:100%;
 	z-index:10000;/*why does bootstrap have such large z-indexes*/
-	transition: all .25s;
+	transition: margin-left .25s;
 	display:flex;
 	background-color:#aaf;
 }

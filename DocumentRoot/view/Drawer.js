@@ -105,7 +105,7 @@ class Drawer{
 		line.setAttribute("y1",y1);
 		line.setAttribute("x2",x2);
 		line.setAttribute("y2",y2);
-		line.setAttribute("style","stroke:rgb(0,0,0);stroke-width:2");
+		//line.setAttribute("style","stroke:rgb(0,0,0);stroke-width:2");
 		draw.appendChild(line);
 	}
 
@@ -213,8 +213,7 @@ class Drawer{
 		line.setAttribute("y1",y);
 		line.setAttribute("x2",x+rx);
 		line.setAttribute("y2",y-topOfLine);
-		line.setAttribute("stroke-width",stroke);
-		line.setAttribute("stroke",fill);
+		line.setAttribute("style","stroke:"+fill);
 		draw.appendChild(line);
 		draw.appendChild(note);
 		//for(let i=duration;i<=0;i++){//lazy coding, wanna add lines to non-quarter notes
@@ -227,8 +226,7 @@ class Drawer{
 			//squiggles were annoying to look at, and so was the code for them.
 			//line=document.createElementNS("http://www.w3.org/2000/svg","path");
 			//line.setAttribute("d","m"+(x+rx)+","+(y-topOfLine+i*ry*-1.25)+"c2,-2 4,2 6,0 l0,1 c-2,2 -4,-2 -6,0 l0,-1z");
-			line.setAttribute("stroke",fill);
-			line.setAttribute("stroke-width",stroke);
+			line.setAttribute("style","stroke:"+fill);
 			draw.appendChild(line);
 		}
 	}

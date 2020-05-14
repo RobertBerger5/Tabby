@@ -22,13 +22,12 @@
 <html lang="en">
 
 <head>
-	<title>Tabby: Edit and Share Tabs!</title>
+	<title>Tabby: Browse</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!--Bootstrap 4 CSS-->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
 	<!--jQuery 3.2.1-->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
@@ -59,9 +58,7 @@
 		$doc->loadHTMLFile("../header.html");
 		echo $doc->saveHTML();
 	?>
-	<!--<div class="header">
-		<p>howdy pardner</p>
-	</div>-->
+	
 	<!--https://bootstrapious.com/p/bootstrap-sidebar-->
 	<div class="sidebarWrapper">
 		<nav id="sidebar" class="active">
@@ -81,8 +78,9 @@
 					<option value="owner">Owner</option>
 					<option value="likes">Likes</option>
 				</select>
-				<span id="descCheckbox">(reverse? 
-					<input type="checkbox" id="descending" onchange="sortTabs()">)</span><!--, find <input type="search" onchange="searchTabs(this.value)"/>-->
+				<span id="descCheckbox">(reverse?
+					<input type="checkbox" id="descending" onchange="sortTabs()">)</span>
+				<!--, find <input type="search" onchange="searchTabs(this.value)"/>-->
 			</h3>
 			<table class="table table-hover table-striped">
 				<thead>
