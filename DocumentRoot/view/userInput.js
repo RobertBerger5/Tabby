@@ -13,6 +13,15 @@ function changeTrack(){
 	editor.changeTrack(currTrack);
 	drawer.drawTab(currTrack);
 }
+function changeTrackString(index){
+	let note=document.getElementById("trackStringNote"+index).value;
+	let octave=document.getElementById("trackStringOctave"+index).value;
+	if(!editor.changeString(index,note,octave)){
+		console.log("cant do it");
+	}else{
+		console.log("TODO: play note");
+	}
+}
 
 function clearTrackMeasure(){
 	if(!confirm("Clear This Measure? (won't apply to other tracks)")){

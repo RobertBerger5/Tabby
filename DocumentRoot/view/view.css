@@ -14,6 +14,9 @@
 	overflow-x:hidden;
 	overflow-y:hidden;
 }
+#userInterface input{
+	width:10%;
+}
 #userInterface div{
 	height:100%;
 	float:left;
@@ -51,6 +54,7 @@
 	transition: left .5s;
 	background-color:#0f0;
 }
+/*TODO: only move it over enough to diplay its contents*/
 .active{
 	left:0px !important;
 }
@@ -58,4 +62,17 @@
 	height:100%;
 	width:5vw;
 	background-color:#f00;
+}
+#ui-track-panel div{
+	float:left;
+	border:0px;
+}
+#ui-track-strings{
+	overflow-y:scroll;
+	padding:0px !important;
+	width:auto;
+}
+#ui-track-strings .track-string{
+	float:none !important;
+	height:auto;
 }

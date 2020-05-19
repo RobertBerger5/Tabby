@@ -1,5 +1,5 @@
 <!doctype html>
-<html language="en">
+<html lang="en">
 
 <head>
 	<title>Tabby: View</title>
@@ -71,25 +71,59 @@
 			<br />
 		</div>
 		<div id="ui-measure-buttons">
-				<button onclick="clearTrackMeasure()">Clear</button>
-				<button onclick="addMeasure()">Add Measure</button>
-				<button onclick="deleteMeasure()">Delete Measure</button>
-				<button>Copy</button>
-				<button>Paste</button>
-				<input type="number"  placeholder="# to paste"/>
+			<button onclick="clearTrackMeasure()">Clear</button>
+			<button onclick="addMeasure()">Add Measure</button>
+			<button onclick="deleteMeasure()">Delete Measure</button>
+			<button>Copy</button>
+			<button>Paste</button>
+			<input type="number" placeholder="# to paste" />
 		</div>
-		<div id="ui-track-panel">
+		<div id="ui-track-panel" class="active">
 			<div id="ui-track-collapse">
 			</div>
-			<p>Current Track:
-				<select id="trackSelector" onchange="changeTrack()">
-					<!--loads dynamically-->
+			<div>
+				<p>Current Track:
+					<select id="trackSelector" onchange="changeTrack()">
+						<!--loads dynamically-->
+					</select>
+				</p>
+				<input id="trackName" type="text" />
+				<br />
+				<select id="trackVoice">
+					<option value="guitar_distort">Distorted Guitar</option>
+					<option value="bass_clean">Clean Bass</option>
 				</select>
-				<p>TRACK TODO: name, voice, and strings (note/octave and delete), add string
-			</p>
-		</div>
-	</div>
-	<!--<div id="userInterface">
+				<br />
+				<button onclick="console.log('TODO: add')">Add String</button>
+			</div>
+			<div id="ui-track-strings">
+				<div class="track-string">
+					<select id="trackStringNote0" onchange="changeTrackString(0)">
+						<option value="G">G</option>
+					</select>
+					<input id="trackStringOctave0" type="number" onchange="changeTrackString(0)" value="3" />
+					<button onclick="console.log('TODO: delete')">delete</button>
+				</div>
+				<div class="track-string">
+					<select>
+						<option value="D">D</option>
+					</select>
+					<button onclick="console.log('TODO: delete')">delete</button>
+				</div>
+				<div class="track-string">
+					<select>
+						<option value="A">A</option>
+					</select>
+					<button onclick="console.log('TODO: delete')">delete</button>
+				</div>
+				<div class="track-string">
+					<select>
+						<option value="E">E</option>
+					</select>
+					<button onclick="console.log('TODO: delete')">delete</button>
+				</div>
+			</div>
+			<!--<div id="userInterface">
 		<!--TODO: make this part prettier--
 		<p>Note duration:
 			<button onclick="changeRhythm(1)">whole</button>
@@ -137,8 +171,8 @@
 		<button onclick="showJSON()">Give me the tab!</button>
 	</div>-->
 
-	<script>
-	/*STRUCTURE OF THE TAB OBJECT:
+			<script>
+			/*STRUCTURE OF THE TAB OBJECT:
 
 			info (for general metadata):
 				title: string for the title
@@ -161,11 +195,11 @@
 							//TODO: might add techniques here (like palm mutes or bends?)
 			*/
 
-	//TODO: read from file, this is gross
-	hardcodedTab = JSON.parse("\
+			//TODO: read from file, this is gross
+			hardcodedTab = JSON.parse("\
 {\"info\":{\"title\":\"(title)\"},\"tracks\":[{\"name\":\"lead guitar\",\"voice\":\"guitar_distort\",\"strings\":[{\"note\":\"D#\",\"octave\":4},{\"note\":\"A#\",\"octave\":3},{\"note\":\"F#\",\"octave\":3},{\"note\":\"C#\",\"octave\":3},{\"note\":\"G#\",\"octave\":2},{\"note\":\"D#\",\"octave\":2}]},{\"name\":\"bass guitar\",\"voice\":\"bass_picked\",\"strings\":[{\"note\":\"F#\",\"octave\":2},{\"note\":\"C#\",\"octave\":2},{\"note\":\"G#\",\"octave\":1},{\"note\":\"D#\",\"octave\":1}]}],\"measures\":[{\"timeN\":4,\"timeD\":4,\"tempo\":105,\"tracks\":[[{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":8}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":6}]},{\"duration\":32,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":32,\"notes\":[{\"string\":5,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":5}]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":105,\"tracks\":[[{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":8}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":2},{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":2},{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":2},{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":2},{\"string\":5,\"fret\":0}]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":105,\"tracks\":[[{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":8}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":6}]},{\"duration\":32,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":32,\"notes\":[{\"string\":5,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":5}]}],[{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":6}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":3}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":2,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":8}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":10}]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":105,\"tracks\":[[{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":8}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":4,\"fret\":7}]}],[{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":6}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":5}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":3}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":16,\"notes\":[{\"string\":2,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":2,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":2,\"fret\":7}]},{\"duration\":16,\"notes\":[{\"string\":2,\"fret\":7}]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":150,\"tracks\":[[{\"duration\":1,\"notes\":[]}],[{\"duration\":8,\"notes\":[{\"string\":1,\"fret\":3}]},{\"duration\":8,\"notes\":[{\"string\":1,\"fret\":5}]},{\"duration\":8,\"notes\":[{\"string\":0,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":0,\"fret\":3}]},{\"duration\":8,\"notes\":[{\"string\":0,\"fret\":5}]},{\"duration\":8,\"notes\":[{\"string\":0,\"fret\":7}]},{\"duration\":8,\"notes\":[{\"string\":0,\"fret\":9}]},{\"duration\":8,\"notes\":[{\"string\":0,\"fret\":10}]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":150,\"tracks\":[[{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":1}]},{\"duration\":8,\"notes\":[{\"string\":5,\"fret\":3}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":0}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":1}]},{\"duration\":8,\"notes\":[{\"string\":4,\"fret\":3}]},{\"duration\":8,\"notes\":[{\"string\":3,\"fret\":0}]},{\"duration\":8,\"notes\":[{\"string\":3,\"fret\":2}]},{\"duration\":8,\"notes\":[{\"string\":3,\"fret\":3}]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":200,\"tracks\":[[{\"duration\":2,\"notes\":[{\"string\":5,\"fret\":3},{\"string\":4,\"fret\":2},{\"string\":3,\"fret\":0},{\"string\":2,\"fret\":0},{\"string\":1,\"fret\":3},{\"string\":0,\"fret\":3}]},{\"duration\":2,\"notes\":[]}],[{\"duration\":1,\"notes\":[]}]]},{\"timeN\":4,\"timeD\":4,\"tempo\":60,\"tracks\":[[{\"duration\":4,\"notes\":[{\"string\":5,\"fret\":0}]},{\"duration\":4,\"notes\":[{\"string\":5,\"fret\":\"=\"}]},{\"duration\":4,\"notes\":[{\"string\":5,\"fret\":2}]},{\"duration\":4,\"notes\":[{\"string\":5,\"fret\":3}]}],[{\"duration\":1,\"notes\":[]}]]}]}\
 				");
-	</script>
+			</script>
 </body>
 
 </html>

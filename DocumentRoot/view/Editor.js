@@ -285,4 +285,20 @@ class Editor{
 		//(unless we chickened out above and returned before deleting any notes)
 		//beat.duration=duration;
 	}
+
+	//CHANGE TRACK SETTINGS
+	changeString(index,note,octave){
+		console.log(note+octave);
+		//TODO: check if new is in Player.frequencies, if not then return false and have the userinterface color em red
+		console.log(Player.frequencies);
+		if(!((note+octave) in Player.frequencies)){
+			return false;
+		}
+		console.log(note+", "+octave);
+		let string=this.tab.tracks[this.track].strings[index];
+		string.note=note;
+		string.octave=octave;
+		console.log(this.tab.tracks[this.track]);
+		return true;
+	}
 }
