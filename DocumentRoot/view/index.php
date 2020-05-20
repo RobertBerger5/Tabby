@@ -47,7 +47,7 @@
 	?>
 	<div id="drawDiv">
 		<svg id="draw" height="1000">
-			<!--the whole tab is dynamically loaded in here-->
+			<!--the whole tab is dynamically loaded in here by the Drawer class-->
 		</svg>
 	</div>
 	<div id="userInterface">
@@ -87,89 +87,22 @@
 						<!--loads dynamically-->
 					</select>
 				</p>
-				<input id="trackName" type="text" />
+				<input id="trackName" type="text" onchange="changeTrackName(this.value);this.blur();" />
 				<br />
-				<select id="trackVoice">
+				<select id="trackVoice" onchange="changeTrackVoice(this.value);this.blur();">
+					<option value="mute" selected>Mute</option>
 					<option value="guitar_distort">Distorted Guitar</option>
-					<option value="bass_clean">Clean Bass</option>
+					<option value="bass_picked">Picked Bass</option>
 				</select>
 				<br />
-				<button onclick="console.log('TODO: add')">Add String</button>
+				<button onclick="addTrackString()">Add String</button>
 			</div>
 			<div id="ui-track-strings">
-				<div class="track-string">
-					<select id="trackStringNote0" onchange="changeTrackString(0)">
-						<option value="G">G</option>
-					</select>
-					<input id="trackStringOctave0" type="number" onchange="changeTrackString(0)" value="3" />
-					<button onclick="console.log('TODO: delete')">delete</button>
-				</div>
-				<div class="track-string">
-					<select>
-						<option value="D">D</option>
-					</select>
-					<button onclick="console.log('TODO: delete')">delete</button>
-				</div>
-				<div class="track-string">
-					<select>
-						<option value="A">A</option>
-					</select>
-					<button onclick="console.log('TODO: delete')">delete</button>
-				</div>
-				<div class="track-string">
-					<select>
-						<option value="E">E</option>
-					</select>
-					<button onclick="console.log('TODO: delete')">delete</button>
-				</div>
+				<!--dynamically loaded-->
 			</div>
-			<!--<div id="userInterface">
-		<!--TODO: make this part prettier--
-		<p>Note duration:
-			<button onclick="changeRhythm(1)">whole</button>
-			<button onclick="changeRhythm(2)">half</button>
-			<button onclick="changeRhythm(4)">quarter</button>
-			<button onclick="changeRhythm(8)">8th</button>
-			<button onclick="changeRhythm(16)">16th</button>
-			<button onclick="changeRhythm(32)">32nd</button>
-			<button onclick="changeRhythm(64)">64th</button>
-			<!--<br /> for dotted rhythms, which don't quite work yet, TODO
-				<button onclick="changeRhythm(.75)">. whole</button>
-				<button onclick="changeRhythm(1.5)">. half</button>
-				<button onclick="changeRhythm(3)">. quarter</button>
-				<button onclick="changeRhythm(6)">. 8th</button>
-				<button onclick="changeRhythm(12)">. 16th</button>
-				<button onclick="changeRhythm(24)">. 32th</button>
-				<button onclick="changeRhythm(48)">. 64nd</button>--
-		</p>
-		<p>Current Track:
-			<select id="trackSelector" onchange="changeTrack()">
-			</select>
-			<!--loads dynamically below, TODO: way to change the track (name, voice, and strings)--
-		</p>
-		<button onclick="clearTrackMeasure()">Clear Track Measure</button>
-		<button onclick="addMeasure()">Add Measure</button>
-		<button onclick="deleteMeasure()">Delete Measure</button>
-		<br />
-		<!--TODO: copy/paste measure buttons--
-		<input type="number" placeholder="new tempo" onchange="changeTempo(this.value);this.value='';this.blur()">
-		<br />
-		<input type="text" placeholder="new time signature"
-			onchange="changeTimeN(this.value);this.value='';this.blur()">
-		<br />
-		<input type="text" placeholder="new time signature"
-			onchange="changeTimeD(this.value);this.value='';this.blur()">
-		<br />
-		<!--let this stand as a testament to how disgusting weakly-typed languages are. I just spent about 3 hours trying to track down why it was saying 16<8, and it turns out that "16"<"8". >:( --
-		<!--<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="1">1</input>
-			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="2">2</input>
-			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="4">4</input>
-			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="8">8</input>
-			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="16">16</input>
-			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="32">32</input>
-			<input type="radio" name="noteDurations" onchange="this.checked=false; changeRhythm(this.value)" value="64">64</input>--
-		<button onclick="showJSON()">Give me the tab!</button>
-	</div>-->
+			<button onclick="showJSON()">Give me the tab!</button>
+		</div>
+	</div>
 
 			<script>
 			/*STRUCTURE OF THE TAB OBJECT:

@@ -21,6 +21,7 @@ class Editor{
 	measure(){return ((this.selected!=null)?this.selected[0]:null);}
 	beat(){return ((this.selected!=null)?this.selected[1]:null);}
 	string(){return ((this.selected!=null)?this.selected[2]:null);}
+	getTrack(){return this.tab.tracks[this.track]}
 
 	getBeat(){ //returns the currently selected beat
 		if(this.selected==null){
@@ -288,17 +289,24 @@ class Editor{
 
 	//CHANGE TRACK SETTINGS
 	changeString(index,note,octave){
-		console.log(note+octave);
-		//TODO: check if new is in Player.frequencies, if not then return false and have the userinterface color em red
-		console.log(Player.frequencies);
 		if(!((note+octave) in Player.frequencies)){
 			return false;
 		}
-		console.log(note+", "+octave);
 		let string=this.tab.tracks[this.track].strings[index];
 		string.note=note;
 		string.octave=octave;
-		console.log(this.tab.tracks[this.track]);
 		return true;
+	}
+	changeTrackName(name){
+		this.getTrack().name=name;
+	}
+	changeTrackVoice(voice){
+		this.getTrack().voice=voice;
+	}
+	addTrackString(){
+		this.getTrack().strings.push({note: "E",octave:2});
+	}
+	deleteTrackString(index){
+		this.getTrack().strings.splice(index,1);
 	}
 }

@@ -27,21 +27,15 @@ $(document).ready(() => {
 
 	//UI things:
 	$('#ui-track-collapse').on('click',()=>{
-		console.log("hi");
 		$('#ui-track-panel').toggleClass('active');
 	});
+
+	loadTrackNames();
+	loadTrack();
 });
 
 function loadTab() {
 	let loadedTab = hardcodedTab;
-
-	//load dropdown of tracks
-	for (let i = 0; i < loadedTab.tracks.length; i++) {
-		let input = document.createElement("option");
-		input.setAttribute("value", i);
-		input.textContent = loadedTab.tracks[i].name;
-		document.getElementById("trackSelector").appendChild(input);
-	}
 
 	return loadedTab;
 }
