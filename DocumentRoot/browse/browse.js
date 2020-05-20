@@ -7,7 +7,7 @@ $(document).ready(() => {
 });
 
 //sort loadedTabs by criterea, reversed or not
-function sortTabs(render=true) {
+function sortTabs(render = true) {
 	let sortBy = $('#sortBy').val();
 	let desc = $('#descending').prop("checked");
 
@@ -38,37 +38,37 @@ function sortTabs(render=true) {
 				renderedTabs = loadedTabs.sort(compareLikesAsc);
 				break;
 			default:
-				throw Error("sortBy val "+sortBy+" not found");
-				//console.log("sortBy val not found");
-				//renderedTabs = loadedTabs.sort(compareTitleAsc);
+				throw Error("sortBy val " + sortBy + " not found");
+			//console.log("sortBy val not found");
+			//renderedTabs = loadedTabs.sort(compareTitleAsc);
 		}
 	}
-	if(render){
+	if (render) {
 		renderTabs();
 	}
 }
 function compareTitleAsc(a, b) {
-	if(a==b){return 0;}
+	if (a == b) { return 0; }
 	return ((a.title > b.title) ? 1 : -1);
 }
 function compareTitleDesc(a, b) {
-	if(a==b){return 0;}
+	if (a == b) { return 0; }
 	return ((a.title < b.title) ? 1 : -1);
 }
 function compareOwnerAsc(a, b) {
-	if(a==b){return 0;}
+	if (a == b) { return 0; }
 	return ((a.username > b.username) ? 1 : -1);
 }
 function compareOwnerDesc(a, b) {
-	if(a==b){return 0;}
+	if (a == b) { return 0; }
 	return ((a.username < b.username) ? 1 : -1);
 }
 function compareLikesAsc(a, b) {
-	if(a==b){return 0;}
+	if (a == b) { return 0; }
 	return ((a.likes < b.likes) ? 1 : -1);
 }//> and < are reversed here because the "reversed" behavior should be to find ones with less likes, "normal" behavior should be to find most liked
 function compareLikesDesc(a, b) {
-	if(a==b){return 0;}
+	if (a == b) { return 0; }
 	return ((a.likes > b.likes) ? 1 : -1);
 }
 

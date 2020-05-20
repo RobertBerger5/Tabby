@@ -58,7 +58,7 @@
 		$doc->loadHTMLFile("../header.html");
 		echo $doc->saveHTML();
 	?>
-	
+
 	<!--https://bootstrapious.com/p/bootstrap-sidebar-->
 	<div class="sidebarWrapper">
 		<nav id="sidebar" class="active">

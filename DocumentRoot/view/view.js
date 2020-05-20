@@ -20,13 +20,13 @@ $(document).ready(() => {
 	player = new Player(tab);
 	drawer.drawTab(currTrack);
 
-	$("#draw").mouseenter(() => {inDraw = true});
-	$("#draw").mouseleave(() => {inDraw = false});
-	$("body").keydown((event) => {handleKey(event)});
+	$("#draw").mouseenter(() => { inDraw = true });
+	$("#draw").mouseleave(() => { inDraw = false });
+	$("body").keydown((event) => { handleKey(event) });
 
 
 	//UI things:
-	$('#ui-track-collapse').on('click',()=>{
+	$('#ui-track-collapse').on('click', () => {
 		$('#ui-track-panel').toggleClass('active');
 	});
 
