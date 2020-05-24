@@ -1,19 +1,14 @@
 <?php
-	$pdo = new PDO('mysql:host=db;dbname=tabby;charset=utf8', 'tab_admin', 'controllerofthetabs');
-	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-	$loaded_tabs=$pdo->query('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id')->fetchAll(PDO::FETCH_ASSOC);
+	require '../db.php';
+	//$loaded_tabs=$pdo->query('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id')->fetchAll(PDO::FETCH_ASSOC);
+	$loaded_tabs=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id',PDO::FETCH_ASSOC);
 
 	for($i=0;$i<count($loaded_tabs);$i++){
-		$stmt=$pdo->prepare('SELECT tag FROM tags WHERE tab= ?');
-		$stmt->execute([$loaded_tabs[$i]['id']]);
-		$tags=$stmt->fetchAll(PDO::FETCH_NUM);
+		$tags=querySafe('SELECT tag FROM tags WHERE tab=?',[$loaded_tabs[$i]['id']]);
 		//TODO: clean this up? right now tags is like [["one"],["two"]]
 		$loaded_tabs[$i]['tags']=$tags;
 
-		$stmt=$pdo->prepare('SELECT COUNT(*) FROM likes WHERE tab=?');
-		$stmt->execute([$loaded_tabs[$i]['id']]);
-		$likes=$stmt->fetchAll(PDO::FETCH_NUM);
+		$likes=querySafe('SELECT COUNT(*) FROM likes WHERE tab=?',[$loaded_tabs[$i]['id']]);
 		$loaded_tabs[$i]['likes']=$likes[0][0];
 	}
 ?>

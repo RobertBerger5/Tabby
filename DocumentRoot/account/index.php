@@ -1,6 +1,16 @@
 <?php
-	$logged_in=FALSE;
-	if(!$logged_in){
+	require '../db.php';
+	session_start();
+	$username=$_SESSION["username"];
+	$password=$_SESSION["password"];
+	if(
+		(
+			empty($username) ||
+			empty($password)
+		) ||
+		!auth($username,$password)
+	){
+		//unsuccessful login attempt
 		header('Location: login.php', true,302);
 		die();
 	}
@@ -8,7 +18,7 @@
 <html>
 
 <head>
-	<title>Tabby: Edit and Share Tabs!</title>
+	<title>Tabby: Account</title>
 </head>
 
 <body>

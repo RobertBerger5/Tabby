@@ -1,9 +1,22 @@
 <?php
-	//TODO: redirect to index.php if authenticate
-	$auth=FALSE;
-	if($auth){
-		header('Location: index.php', true,302);
-		die();
+	require '../db.php';
+	session_start();
+
+	$error=NULL;
+	if(!empty($_POST)){
+		$username=$_POST["username"];
+		$password=$_POST["password"];
+		if(auth($username,$password)){
+			$_SESSION["username"]=$username;
+			$_SESSION["password"]=$password;
+			header('Location: index.php', true,302);
+			die();
+		}else{
+			session_destroy();
+			$error="Authentication Error";
+		}
+	}else{
+		//they weren't trying to send POST data, don't give them an error
 	}
 ?>
 
@@ -11,7 +24,7 @@
 <html lang="en">
 
 <head>
-	<title>Tabby: View</title>
+	<title>Tabby: Login</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!--Bootstrap 4 CSS-->
@@ -40,5 +53,20 @@
 
 <body>
 	<p>TODO: form for logging in. verify attempted username/password, redirect to index.php if successul, otherwise display a message if there was POST info, but incorrect</p>
+	<?php
+		if($error){
+			echo "<p>OOPS: ".$error."</p>";
+		}
+	?>
+	<form method="post">
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username" required>
+		<br>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" required>
+		<br>
+		<input type="submit" value="Submit">
+	</form>
+	<a href="register.php">register</a>
 </body>
 </html>
