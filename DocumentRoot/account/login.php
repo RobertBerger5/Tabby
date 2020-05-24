@@ -52,7 +52,6 @@
 </head>
 
 <body>
-	<p>TODO: form for logging in. verify attempted username/password, redirect to index.php if successul, otherwise display a message if there was POST info, but incorrect</p>
 	<?php
 		if($error){
 			echo "<p>OOPS: ".$error."</p>";

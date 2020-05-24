@@ -27,19 +27,12 @@
 		return $ret;
 	}
 
-	function auth($user,$pass){
-		#$result=mySQL($conn,'SELECT password FROM users WHERE username=? LIMIT 1;',array($user));
-		#if(!$result){
-		#  return false;
-		#}
-		#$row=$result->fetch_assoc();
-		//print_r($row);
-
-		$res=querySafe('SELECT pass FROM users WHERE username=? LIMIT 1;',[$user],PDO::FETCH_ASSOC);
+	function auth($username,$password){
+		$res=querySafe('SELECT password FROM users WHERE username=? LIMIT 1;',[$username],PDO::FETCH_ASSOC);
 		
-		//echo "comparing $pass with " . $res[0]["pass"] . "<br />";
+		//echo "comparing $password with " . $res[0]["password"] . "<br />";
 		
-		if(password_verify($pass,$res[0]["pass"])){
+		if(password_verify($password,$res[0]["password"])){
 		  //echo "passwords match!<br />";
 		  return true;
 		}else{

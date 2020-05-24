@@ -78,7 +78,7 @@
 			<button>Paste</button>
 			<input type="number" placeholder="# to paste" />
 		</div>
-		<div id="ui-track-panel" class="active">
+		<div id="ui-track-panel">
 			<div id="ui-track-collapse">
 			</div>
 			<div>

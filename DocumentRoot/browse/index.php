@@ -1,8 +1,36 @@
 <?php
 	require '../db.php';
-	//$loaded_tabs=$pdo->query('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id')->fetchAll(PDO::FETCH_ASSOC);
-	$loaded_tabs=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id',PDO::FETCH_ASSOC);
+	session_start();
+	$loaded_tabs=NULL;
+	if(empty($_GET) || $_GET["filter"]=="public"){
+		$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
+		if($res[0]=="error"){
+			echo "PDO ERROR: ".$res[1]."<br>";
+		}else{
+			$loaded_tabs=$res;
+		}
+	}else if($_GET["filter"]=="mytabs"){
+		//echo "TODO: search by current user";
+		//echo $_SESSION["username"];
+		$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN users u ON u.id=t.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
+		if($res[0]=="error"){
+			echo "PDO ERROR: ".$res[1]."<br>";
+		}else{
+			$loaded_tabs=$res;
+		}
+	}else if($_GET["filter"]=="shared"){
+		//TODO: check if this is correct when I actually get some shared tabs goin
+		$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN shares s ON t.id=s.tab JOIN users u ON u.id=s.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
+		if($res[0]=="error"){
+			echo "PDO ERROR: ".$res[1]."<br>";
+		}else{
+			$loaded_tabs=$res;
+		}
+	}else{
+		echo "yo what";
+	}
 
+	//print_r($loaded_tabs);
 	for($i=0;$i<count($loaded_tabs);$i++){
 		$tags=querySafe('SELECT tag FROM tags WHERE tab=?',[$loaded_tabs[$i]['id']]);
 		//TODO: clean this up? right now tags is like [["one"],["two"]]
@@ -60,9 +88,9 @@
 			<div id="sidebarContent">
 				<h3>Search in:</h3>
 				<ul class="list-unstyled components">
-					<li>mine</li>
-					<li>shared</li>
-					<li class="active">public</li>
+					<li><a href="index.php?filter=mytabs">mine</a></li>
+					<li><a href="index.php?filter=shared">shared</a></li>
+					<li><a href="index.php?filter=public">public</a></li>
 				</ul>
 			</div>
 			<div id="sidebarCollapse" />

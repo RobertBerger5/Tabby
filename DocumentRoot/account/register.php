@@ -3,20 +3,20 @@
 
 	$error=NULL;
 	if(!empty($_POST)){
-		$user=$_POST["username"];
-		$pass=$_POST["password"];
+		$username=$_POST["username"];
+		$password=$_POST["password"];
 		//echo $pass;
 		//TODO: check username and password for length, etc
-		if(empty($user) || empty($pass)){
+		if(empty($username) || empty($password)){
 			$error="Empty username or password given";
-		}else if(!preg_match('/^[a-zA-Z0-9_\-."\']{3,20}$/',$user)){
+		}else if(!preg_match('/^[a-zA-Z0-9_\-."\']{3,20}$/',$username)){
 			//regex is hard, here's what it's doing:
 			//each character in the set [...] is checked for being any of these:
 			//	alphanumeric
 			//	underscore, hyphen, period, quote, apostrophe
 			//{3,50} checks that it's between 3 and 20 characters
 			$error="Invalid username";
-		}else if(false && !preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/",$pass)){
+		}else if(false && !preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/",$password)){
 			//credit to https://www.thepolyglotdeveloper.com/2015/05/use-regex-to-test-password-strength-in-javascript/
 			//explination: at least one of the folowing
 			//	lowercase
@@ -27,12 +27,12 @@
 			$error="Invalid password";
 		}else{
 			//TODO: add to DB, if no error then do this
-			$secure=password_hash($pass,PASSWORD_DEFAULT);//encrypt it using PHP's built-in password encryptor, which should be bcrypt with randomly generated salts that are stored in the string itself
-			$res=querySafe('INSERT INTO users (username,pass) VALUES (?,?)',[$user,$secure]);
+			$secure=password_hash($password,PASSWORD_DEFAULT);//encrypt it using PHP's built-in password encryptor, which should be bcrypt with randomly generated salts that are stored in the string itself
+			$res=querySafe('INSERT INTO users (username,password) VALUES (?,?)',[$username,$secure]);
 			if($res[0]=='error'){ //my own function returns array with first index string 'error' and second as the error code
 				switch($res[1]){
 					case '23000':
-						$error="Username already taken";
+						$error="Username \"".$username."\" already taken";
 					break;
 					case 'HY000':
 						//happens because we fetchAll, just ignore it, worked fine and the db was updated

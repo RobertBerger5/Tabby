@@ -107,6 +107,7 @@ function renderTabs() {
 	for (let i = 0; i < renderedTabs.length; i++) {
 		let tab = renderedTabs[i];
 		let tr = document.createElement("tr");
+		tr.setAttribute("onclick","viewTab("+tab.id+");");
 
 		let td = document.createElement("td");
 		td.innerHTML = i + 1;
@@ -118,7 +119,7 @@ function renderTabs() {
 			tagsString += "#" + tab.tags[j] + ", ";
 		}
 		//TODO: link to /view/ pages
-		td.innerHTML = "<b>" + tab.title + "</b> - <i>" + tab.username + "</i> <span class='text-muted'>" + tagsString + "</span>";
+		td.innerHTML = "<b>" + tab.title + "</a></b> - <i>" + tab.username + "</i> <span class='text-muted'>" + tagsString + "</span>";
 		tr.appendChild(td);
 
 		td = document.createElement("td");
@@ -128,6 +129,10 @@ function renderTabs() {
 		document.getElementById("tabTable").appendChild(tr);
 	}
 	//TODO: say query used at the bottom? or maybe at the top
+}
+
+function viewTab(id){
+	window.location.href="/view?tab="+id;
 }
 
 
