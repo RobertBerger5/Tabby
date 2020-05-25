@@ -13,7 +13,6 @@ $(document).ready(() => {
 	//tab things:
 	let windowWidth = document.body.clientWidth;
 	$("#draw").width(windowWidth);
-	tab = loadTab();
 	window.AudioContext = window.AudioContext || window.webkitAudioContext; //play in Firefox
 	drawer = new Drawer(tab, document.getElementById("draw"), windowWidth);
 	editor = new Editor(tab, currTrack);
@@ -33,12 +32,6 @@ $(document).ready(() => {
 	loadTrackNames();
 	loadTrack();
 });
-
-function loadTab() {
-	let loadedTab = hardcodedTab;
-
-	return loadedTab;
-}
 
 function handleKey(event) {
 	if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {

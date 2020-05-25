@@ -1,6 +1,5 @@
 <?php
 	require '../db.php';
-	session_start();
 	$loaded_tabs=NULL;
 	if(empty($_GET) || $_GET["filter"]=="public"){
 		$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
