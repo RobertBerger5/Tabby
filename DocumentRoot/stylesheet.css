@@ -15,6 +15,14 @@ body{
 .header h1{
 	color:#000;
 }
+#myAccount{
+	display:block;
+	position:absolute;
+	width:25%;
+	height:inherit;
+	top:0px;
+	right:0px;
+}
 
 .sidebarWrapper{
 	height:90vh;

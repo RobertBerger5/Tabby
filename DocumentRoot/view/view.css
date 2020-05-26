@@ -1,21 +1,33 @@
+#menu{
+	height:5vh;
+	width:100%;
+	background-color:#ddd;
+}
+.dropdown-toggle{
+	height:100%;
+}
+.dropdown-menu{
+	padding:0px;
+}
+.dropdown-item{
+	margin:0px;
+}
+
 #drawDiv{
-	height:60vh;
+	height:65vh;
 	width:100%;
 	padding:10px;
 	overflow: scroll;
 }
 
 #userInterface{
-	height:30vh;
+	height:20vh;
 	width:100%;
 	background-color:#aaa;
 	margin:0px;
 	padding:0px;
 	overflow-x:hidden;
 	overflow-y:hidden;
-}
-#userInterface input{
-	
 }
 #userInterface div{
 	height:100%;
@@ -48,7 +60,7 @@
 	position:absolute;
 	bottom:0px;
 	left: 95vw;
-	height:30vh !important;
+	height:inherit !important;
 	width:100vw;
 	padding:0px !important;
 	transition: left .5s;
@@ -71,6 +83,10 @@
 	overflow-y:scroll;
 	padding:0px !important;
 	width:auto;
+	text-align:center;
+}
+#ui-track-strings input{
+	width:25px;
 }
 #ui-track-strings .track-string{
 	float:none !important;

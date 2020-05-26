@@ -1,3 +1,7 @@
+<?php
+	header('Location: /browse/', true,302);
+	die();
+?>
 <html>
 
 <head>

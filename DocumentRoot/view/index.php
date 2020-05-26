@@ -21,15 +21,6 @@
 		$tab=queryNormal("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public AND t.id=1",PDO::FETCH_ASSOC)[0];
 	}
 	$data=json_encode($tab["data"]);
-	//echo $data;
-
-
-	/*if(!auth($_SESSION["username"],$_SESSION["password"])){
-		$error="Authentication Error (are you logged in?)";
-		$tab_id=1;
-	}else{
-		"SELECT 1 FROM "
-	}*/
 ?>
 
 <!doctype html>
@@ -82,11 +73,52 @@
 			echo "<script>alert(\"".$error."\")</script>";
 		}
 	?>
+	<div id="menu" class="d-flex flex-row justify-content-start align-items-stretch">
+		<div class="dropdown">
+			<button class="dropdown-toggle" data-toggle="dropdown">File</button>
+			<div class="dropdown-menu">
+				<p class="dropdown-item">Save</p>
+				<p class="dropdown-item">Rename</p>
+				<p class="dropdown-item">Fork</p>
+				<p class="dropdown-item">Delete (?)</p>
+				<p class="dropdown-item">Info</p>
+			</div>
+		</div>
+		<div class="dropdown">
+			<button class="dropdown-toggle" data-toggle="dropdown">Edit</button>
+			<div class="dropdown-menu">
+				<p class="dropdown-item">Clear Measure (track)</p>
+				<p class="dropdown-item">Clear Measure (all)</p>
+				<p class="dropdown-item">Add Measure</p>
+				<p class="dropdown-item">Delete Measure</p>
+				<p class="dropdown-item">Copy Measure(s)</p>
+				<p class="dropdown-item">Paste Measure(s)</p>
+			</div>
+		</div>
+		<div class="dropdown">
+			<button class="dropdown-toggle" data-toggle="dropdown">Share</button>
+			<div class="dropdown-menu">
+				<p class="dropdown-item">Shared with...</p>
+				<p class="dropdown-item">Share Tab</p>
+				<p class="dropdown-item">Make Public (?)</p>
+			</div>
+		</div>
+		<div class="dropdown">
+			<button class="dropdown-toggle" data-toggle="dropdown">View</button>
+			<div class="dropdown-menu">
+				<p class="dropdown-item">Hide UI</p>
+				<p class="dropdown-item">Zoom In</p>
+				<p class="dropdown-item">Zoom Out</p>
+			</div>
+		</div>
+	</div>
+
 	<div id="drawDiv">
 		<svg id="draw" height="1000">
 			<!--the whole tab is dynamically loaded in here by the Drawer class-->
 		</svg>
 	</div>
+
 	<div id="userInterface">
 		<div id="ui-durations">
 			<button onclick="changeRhythm(1)">whole</button>
@@ -164,7 +196,6 @@
 							fret: int for which fret to play (or '=' for a hold)
 							//TODO: might add techniques here (like palm mutes or bends?)
 	*/
-	var data = <?php echo $data ?> ;
 	var tab = JSON.parse( <?php echo $data ?> );
 
 	/*tab = JSON.parse("\
