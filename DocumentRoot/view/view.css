@@ -2,6 +2,7 @@
 	height:5vh;
 	width:100%;
 	background-color:#ddd;
+	border:1px solid black;
 }
 .dropdown-toggle{
 	height:100%;
@@ -56,7 +57,7 @@
 	width:49%;
 	height:33%;
 }
-#ui-track-panel{
+/*#ui-track-panel{
 	position:absolute;
 	bottom:0px;
 	left: 95vw;
@@ -66,7 +67,7 @@
 	transition: left .5s;
 	background-color:#0f0;
 }
-/*TODO: only move it over enough to diplay its contents*/
+/*TODO: only move it over enough to diplay its contents*
 .active{
 	left:0px !important;
 }
@@ -78,12 +79,23 @@
 #ui-track-panel div{
 	float:left;
 	border:0px;
+}*/
+#ui-track-edit{
+	width: 30vw;
+}
+#ui-track-edit p{
+	margin-bottom: 0px;
 }
 #ui-track-strings{
 	overflow-y:scroll;
 	padding:0px !important;
-	width:auto;
+	width:15vw;
 	text-align:center;
+	border-left:none !important;
+	border-right:1px solid black !important;
+}
+#ui-track-strings div{
+	border:none;
 }
 #ui-track-strings input{
 	width:25px;
@@ -91,4 +103,5 @@
 #ui-track-strings .track-string{
 	float:none !important;
 	height:auto;
+	padding:2px;
 }

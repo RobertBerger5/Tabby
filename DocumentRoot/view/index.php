@@ -88,7 +88,8 @@
 			<button class="dropdown-toggle" data-toggle="dropdown">Edit</button>
 			<div class="dropdown-menu">
 				<p onclick="clearTrackMeasure()" class="dropdown-item">Clear Measure (track)</p>
-				<p onclick="clearTrackMeasure();alert('TODO: clear other tracks')" class="dropdown-item">Clear Measure (all)</p>
+				<p onclick="clearTrackMeasure();alert('TODO: clear other tracks')" class="dropdown-item">Clear Measure
+					(all)</p>
 				<p onclick="addMeasure()" class="dropdown-item">Add Measure</p>
 				<p onclick="deleteMeasure()" class="dropdown-item">Delete Measure</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Copy Measure(s)</p>
@@ -139,37 +140,24 @@
 				onchange="changeTimeD(this.value);this.value='';this.blur()">
 			<br />
 		</div>
-		<div id="ui-measure-buttons">
-			<button onclick="clearTrackMeasure()">Clear</button>
-			<button onclick="addMeasure()">Add Measure</button>
-			<button onclick="deleteMeasure()">Delete Measure</button>
-			<button>Copy</button>
-			<button>Paste</button>
-			<input type="number" placeholder="# to paste" />
-		</div>
-		<div id="ui-track-panel">
-			<div id="ui-track-collapse">
-			</div>
-			<div>
-				<p>Current Track:
-					<select id="trackSelector" onchange="changeTrack()">
-						<!--loads dynamically-->
-					</select>
-				</p>
-				<input id="trackName" type="text" onchange="changeTrackName(this.value);this.blur();" />
-				<br />
-				<select id="trackVoice" onchange="changeTrackVoice(this.value);this.blur();">
-					<option value="mute" selected>Mute</option>
-					<option value="guitar_distort">Distorted Guitar</option>
-					<option value="bass_picked">Picked Bass</option>
+		<div id=ui-track-edit>
+			<p>Current Track:
+				<select id="trackSelector" onchange="changeTrack()">
+					<!--loads dynamically-->
 				</select>
-				<br />
-				<button onclick="addTrackString()">Add String</button>
-			</div>
-			<div id="ui-track-strings">
-				<!--dynamically loaded-->
-			</div>
-			<button onclick="showJSON()">Give me the tab!</button>
+			</p>
+			<input id="trackName" type="text" onchange="changeTrackName(this.value);this.blur();" />
+			<br />
+			<select id="trackVoice" onchange="changeTrackVoice(this.value);this.blur();">
+				<option value="mute" selected>Mute</option>
+				<option value="guitar_distort">Distorted Guitar</option>
+				<option value="bass_picked">Picked Bass</option>
+			</select>
+			<br />
+			<button onclick="addTrackString()">Add String</button>
+		</div>
+		<div id="ui-track-strings">
+			<!--dynamically loaded-->
 		</div>
 	</div>
 
