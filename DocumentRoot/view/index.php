@@ -77,38 +77,38 @@
 		<div class="dropdown">
 			<button class="dropdown-toggle" data-toggle="dropdown">File</button>
 			<div class="dropdown-menu">
-				<p class="dropdown-item">Save</p>
-				<p class="dropdown-item">Rename</p>
-				<p class="dropdown-item">Fork</p>
-				<p class="dropdown-item">Delete (?)</p>
-				<p class="dropdown-item">Info</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Save</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Rename</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Fork</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Delete (?)</p>
+				<p onclick="alert('TODO: whole nother page');showJSON()" class="dropdown-item">Info</p>
 			</div>
 		</div>
 		<div class="dropdown">
 			<button class="dropdown-toggle" data-toggle="dropdown">Edit</button>
 			<div class="dropdown-menu">
-				<p class="dropdown-item">Clear Measure (track)</p>
-				<p class="dropdown-item">Clear Measure (all)</p>
-				<p class="dropdown-item">Add Measure</p>
-				<p class="dropdown-item">Delete Measure</p>
-				<p class="dropdown-item">Copy Measure(s)</p>
-				<p class="dropdown-item">Paste Measure(s)</p>
+				<p onclick="clearTrackMeasure()" class="dropdown-item">Clear Measure (track)</p>
+				<p onclick="clearTrackMeasure();alert('TODO: clear other tracks')" class="dropdown-item">Clear Measure (all)</p>
+				<p onclick="addMeasure()" class="dropdown-item">Add Measure</p>
+				<p onclick="deleteMeasure()" class="dropdown-item">Delete Measure</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Copy Measure(s)</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Paste Measure(s)</p>
 			</div>
 		</div>
 		<div class="dropdown">
 			<button class="dropdown-toggle" data-toggle="dropdown">Share</button>
 			<div class="dropdown-menu">
-				<p class="dropdown-item">Shared with...</p>
-				<p class="dropdown-item">Share Tab</p>
-				<p class="dropdown-item">Make Public (?)</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Shared with...</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Share Tab</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Make Public (?)</p>
 			</div>
 		</div>
 		<div class="dropdown">
 			<button class="dropdown-toggle" data-toggle="dropdown">View</button>
 			<div class="dropdown-menu">
-				<p class="dropdown-item">Hide UI</p>
-				<p class="dropdown-item">Zoom In</p>
-				<p class="dropdown-item">Zoom Out</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Hide UI</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Zoom In</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Zoom Out</p>
 			</div>
 		</div>
 	</div>
