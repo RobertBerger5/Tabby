@@ -77,7 +77,7 @@
 		<div class="dropdown">
 			<button class="dropdown-toggle" data-toggle="dropdown">File</button>
 			<div class="dropdown-menu">
-				<p onclick="alert('TODO: this')" class="dropdown-item">Save</p>
+				<p onclick="saveTab()" class="dropdown-item">Save</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Rename</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Fork</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Delete (?)</p>
@@ -111,6 +111,18 @@
 				<p onclick="alert('TODO: this')" class="dropdown-item">Zoom In</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Zoom Out</p>
 			</div>
+		</div>
+		<div class="dropdown">
+			<button class="dropdown-toggle" data-toggle="dropdown">Playback</button>
+			<div class="dropdown-menu">
+				<p onclick="alert('TODO: this')" class="dropdown-item">Mute</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Louder</p>
+				<p onclick="alert('TODO: this')" class="dropdown-item">Quieter</p>
+			</div>
+		</div>
+		<div id="ajaxStatus">
+			<div id="ajaxStatus-loader"></div>
+			<div id="ajaxStatus-text">Status</div>
 		</div>
 	</div>
 
@@ -184,6 +196,7 @@
 							fret: int for which fret to play (or '=' for a hold)
 							//TODO: might add techniques here (like palm mutes or bends?)
 	*/
+	var tab_id=<?php echo $tab_id ?>;
 	var tab = JSON.parse( <?php echo $data ?> );
 
 	/*tab = JSON.parse("\

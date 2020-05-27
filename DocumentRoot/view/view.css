@@ -14,6 +14,36 @@
 	margin:0px;
 }
 
+#ajaxStatus{
+	opacity:0%;
+	padding:.5vh;
+	padding-left:10px;
+	width:30%;
+	transition: opacity .25s;
+}
+#ajaxStatus-loader{
+	float:left;
+	border-width:1vh;
+	border-style: solid;
+	border-color:#eee; /*light grey*/
+	border-top-color: #3ae; /* Blue */
+	border-radius: 50%;
+	width: 4vh;
+	height: 4vh;
+	animation: spin 2s linear infinite;
+	transition: border-width .5s,border-color .5s;
+}
+@keyframes spin{
+	0%{transform:rotate(0deg);}
+	100%{transform:rotate(360deg);}
+}
+#ajaxStatus-text{
+	width:50%;
+	margin:0px;
+	float:left;
+	margin-left:5px;
+}
+
 #drawDiv{
 	height:65vh;
 	width:100%;
@@ -57,29 +87,6 @@
 	width:49%;
 	height:33%;
 }
-/*#ui-track-panel{
-	position:absolute;
-	bottom:0px;
-	left: 95vw;
-	height:inherit !important;
-	width:100vw;
-	padding:0px !important;
-	transition: left .5s;
-	background-color:#0f0;
-}
-/*TODO: only move it over enough to diplay its contents*
-.active{
-	left:0px !important;
-}
-#ui-track-collapse{
-	height:100%;
-	width:5vw;
-	background-color:#f00;
-}
-#ui-track-panel div{
-	float:left;
-	border:0px;
-}*/
 #ui-track-edit{
 	width: 30vw;
 }

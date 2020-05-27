@@ -6,6 +6,23 @@ function selectNote(id) {
 	editor.select(id);
 }
 
+function saveTab(){
+	ajaxStatusShow();
+	let xhttp=new XMLHttpRequest();
+	xhttp.onreadystatechange=function(){
+		if(this.readyState==4 && this.status==200){
+			if(this.responseText[0]=="E"){//some kinda error
+				ajaxStatusUpdate(false,this.responseText.slice(2));
+			}else{
+				ajaxStatusUpdate(true);
+			}
+		}
+	};
+	xhttp.open("POST","ajaxFiles/saveTab.php",true);
+	xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xhttp.send("id="+tab_id+"&data="+JSON.stringify(tab));
+}
+
 //called by the dropdown "trackSelector" <select> element
 function changeTrack() {
 	currTrack = document.getElementById("trackSelector").value;
