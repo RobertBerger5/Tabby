@@ -35,6 +35,7 @@ services:
       - db
     volumes:
       - ./DocumentRoot:/var/www/html
+      - ./includedPHP:/var/www/includedPHP
     ports:
       - 80:80
 

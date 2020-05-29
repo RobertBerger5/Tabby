@@ -1,5 +1,5 @@
 <?php
-	require '../db.php';
+	require '../../includedPHP/db.php';
 	$tab_id=$_GET["tab"];
 	$error=NULL;
 	if(empty($tab_id)){

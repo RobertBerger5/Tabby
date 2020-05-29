@@ -1,5 +1,5 @@
 <?php
-	require '../db.php';
+	require '../../includedPHP/db.php';
 
 	$error=NULL;
 	if(!empty($_POST)){

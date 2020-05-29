@@ -1,5 +1,5 @@
 <?php
-	require '../db.php';
+	require '../../includedPHP/db.php';
 	$username=$_SESSION["username"];
 	$password=$_SESSION["password"];
 	if(

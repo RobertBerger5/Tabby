@@ -1,5 +1,5 @@
 <?php
-	require '../db.php';
+	require '../../includedPHP/db.php';
 	$loaded_tabs=NULL;
 	if(empty($_GET) || $_GET["filter"]=="public"){
 		try{
