@@ -42,6 +42,10 @@
 	}
 
 	function auth($username,$password){
+		if(empty($username) || empty($password)){
+			return false;
+		}
+		
 		try{
 			$res=querySafe('SELECT password FROM users WHERE username=? LIMIT 1;',[$username],PDO::FETCH_ASSOC);
 		}catch(Exception $e){ //something went wrong, don't authenticate

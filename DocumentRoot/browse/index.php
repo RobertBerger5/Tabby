@@ -1,5 +1,7 @@
 <?php
 	require '../../includedPHP/db.php';
+	require '../../includedPHP/functions.php';
+
 	$loaded_tabs=NULL;
 	if(empty($_GET) || $_GET["filter"]=="public"){
 		try{
@@ -87,9 +89,10 @@
 	var loadedTabs = JSON.parse('<?php echo json_encode($loaded_tabs) ?>');
 	</script>
 	<?php
-		$doc=new DOMDocument();
+		/*$doc=new DOMDocument();
 		$doc->loadHTMLFile("../header.html");
-		echo $doc->saveHTML();
+		echo $doc->saveHTML();*/
+		loadHeader();
 	?>
 
 	<!--https://bootstrapious.com/p/bootstrap-sidebar-->

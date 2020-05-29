@@ -12,16 +12,20 @@ body{
 	top:1vh;
 	left:5px;
 }
-.header h1{
+#pageTitle{
 	color:#000;
+	margin:0px;
 }
 #myAccount{
-	display:block;
 	position:absolute;
 	width:25%;
 	height:inherit;
 	top:0px;
 	right:0px;
+	overflow:show;
+}
+#myAccount p{
+	margin:0px;
 }
 
 .sidebarWrapper{

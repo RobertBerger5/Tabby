@@ -1,5 +1,6 @@
 <?php
 	require '../../includedPHP/db.php';
+	require '../../includedPHP/functions.php';
 	$tab_id=$_GET["tab"];
 	$error=NULL;
 	if(empty($tab_id)){
@@ -66,9 +67,11 @@
 
 <body>
 	<?php
-		$doc=new DOMDocument();
+		/*$doc=new DOMDocument();
 		$doc->loadHTMLFile("../header.html");
 		echo $doc->saveHTML();
+		*/
+		loadHeader();
 		if(!empty($error)){
 			echo "<script>alert(\"".$error."\")</script>";
 		}

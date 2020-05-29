@@ -1,12 +1,12 @@
 <?php
+	//page allows users to register, and if they enter a valid username and password, their account is created and they're redirected to the login page
 	require '../../includedPHP/db.php';
+	require '../../includedPHP/functions.php';
 
 	$error=NULL;
 	if(!empty($_POST)){
 		$username=$_POST["username"];
 		$password=$_POST["password"];
-		//echo $pass;
-		//TODO: check username and password for length, etc
 		if(empty($username) || empty($password)){
 			$error="Empty username or password given";
 		}else if(!preg_match('/^[a-zA-Z0-9_\-."\']{3,20}$/',$username)){
@@ -36,11 +36,6 @@
 				switch($e->getMessage()){
 					case '23000':
 						$error="Username \"".$username."\" already taken";
-					break;
-					case 'HY000':
-						//happens because we fetchAll, just ignore it, worked fine and the db was updated
-						//echo $secure;
-						echo "yo what this should work";
 					break;
 					default:
 						$error="Unhandled PDO error ".$res[1].", try again later? (if this problem persists, email me about it and I'll try to fix it up)";
@@ -84,9 +79,8 @@
 </head>
 
 <body>
-	<p>TODO: form for registering, send to this same page, redirect to login.php with the info if successful. If there's
-		POST info, but incorrect, display a message of what went wrong</p>
 	<?php
+		loadHeader();
 		if($error){
 			echo "<p>OOPS: ".$error."</p>";
 		}

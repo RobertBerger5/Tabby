@@ -1,5 +1,7 @@
 <?php
+	//page allows users to enter a username and password, and if they match against entries in the db they're redirected to the page about them
 	require '../../includedPHP/db.php';
+	require '../../includedPHP/functions.php';
 
 	$error=NULL;
 	if(!empty($_POST)){
@@ -52,6 +54,7 @@
 
 <body>
 	<?php
+		loadHeader();
 		if($error){
 			echo "<p>OOPS: ".$error."</p>";
 		}
