@@ -2,41 +2,52 @@
 	require '../db.php';
 	$loaded_tabs=NULL;
 	if(empty($_GET) || $_GET["filter"]=="public"){
-		$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
-		if($res[0]=="error"){
-			echo "PDO ERROR: ".$res[1]."<br>";
-		}else{
+		try{
+			$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
+		}catch(Exception $e){
+			echo "PDO ERROR: ".$e->getMessage()."<br>";
 		}
 	}else if($_GET["filter"]=="mytabs"){
 		//echo "TODO: search by current user";
 		//echo $_SESSION["username"];
-		$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN users u ON u.id=t.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
-		if($res[0]=="error"){
-			echo "PDO ERROR: ".$res[1]."<br>";
-		}else{
+		try{
+			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN users u ON u.id=t.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
+		}catch(Exception $e){
+			echo "PDO ERROR: ".$e->getMessage()."<br>";
 		}
 	}else if($_GET["filter"]=="shared"){
-		//TODO: check if this is correct when I actually get some shared tabs goin
-		$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN shares s ON t.id=s.tab JOIN users u ON u.id=s.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
-		if($res[0]=="error"){
-			echo "PDO ERROR: ".$res[1]."<br>";
-		}else{
+		//TODO: this includes their own tabs, that should be automatically shared with themselves
+		try{
+			//TODO: also u.username reflects the username of the person it's shared with, not the username of the owner...
+			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN shares s ON t.id=s.tab JOIN users u ON u.id=s.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
+		}catch(Exception $e){
+			echo "PDO ERROR: ".$e->getMessage()."<br>";
 		}
 	}else{
-		echo "yo what";
+		//unknown filter, just give em the default
+		try{
+			$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
+			$loaded_tabs=$res;
+		}catch(Exception $e){
+			echo "PDO ERROR: ".$e->getMessage()."<br>";
+		}
 	}
 
 	//print_r($loaded_tabs);
 	for($i=0;$i<count($loaded_tabs);$i++){
-		$tags=querySafe('SELECT tag FROM tags WHERE tab=?',[$loaded_tabs[$i]['id']]);
+		try{
+			$tags=querySafe('SELECT tag FROM tags WHERE tab=?',[$loaded_tabs[$i]['id']],PDO::FETCH_NUM);
 		//TODO: clean this up? right now tags is like [["one"],["two"]]
-		$loaded_tabs[$i]['tags']=$tags;
+			$loaded_tabs[$i]['tags']=$tags;
 
-		$likes=querySafe('SELECT COUNT(*) FROM likes WHERE tab=?',[$loaded_tabs[$i]['id']]);
-		$loaded_tabs[$i]['likes']=$likes[0][0];
+			$likes=querySafe('SELECT COUNT(*) FROM likes WHERE tab=?',[$loaded_tabs[$i]['id']],PDO::FETCH_NUM);
+			$loaded_tabs[$i]['likes']=$likes[0][0];
+		}catch(Exception $e){
+			echo "PDO ERROR: ".$e->getMessage()."<br>";
+		}
 	}
 ?>
 

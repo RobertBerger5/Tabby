@@ -28,22 +28,24 @@
 		}else{
 			//TODO: add to DB, if no error then do this
 			$secure=password_hash($password,PASSWORD_DEFAULT);//encrypt it using PHP's built-in password encryptor, which should be bcrypt with randomly generated salts that are stored in the string itself
-			$res=querySafe('INSERT INTO users (username,password) VALUES (?,?)',[$username,$secure]);
-			if($res[0]=='error'){ //my own function returns array with first index string 'error' and second as the error code
-				switch($res[1]){
+			try{
+				$res=querySafe('INSERT INTO users (username,password) VALUES (?,?)',[$username,$secure]);
+				header('Location: login.php', true,302);
+				die();
+			}catch(Exception $e){
+				switch($e->getMessage()){
 					case '23000':
 						$error="Username \"".$username."\" already taken";
 					break;
 					case 'HY000':
 						//happens because we fetchAll, just ignore it, worked fine and the db was updated
 						//echo $secure;
-						header('Location: login.php', true,302);
-						die();
+						echo "yo what this should work";
 					break;
 					default:
 						$error="Unhandled PDO error ".$res[1].", try again later? (if this problem persists, email me about it and I'll try to fix it up)";
 				}
-			}//TODO: this is written horribly
+			}
 		}
 	}else{
 		//they weren't trying to send POST data, don't give them an error

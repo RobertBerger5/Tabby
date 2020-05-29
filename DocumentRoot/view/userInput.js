@@ -14,6 +14,7 @@ function saveTab(){
 			if(this.responseText[0]=="E"){//some kinda error
 				ajaxStatusUpdate(false,this.responseText.slice(2));
 			}else{
+				//alert(this.responseText);
 				ajaxStatusUpdate(true);
 			}
 		}
