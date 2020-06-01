@@ -2,6 +2,7 @@
 	require '../../includedPHP/db.php';
 	require '../../includedPHP/functions.php';
 
+	//TODO: just have a search query in GET info, so they can search by tags and such? Cuz this is gonna get reeeal messy if enough people actually start using it
 	$loaded_tabs=NULL;
 	if(empty($_GET) || $_GET["filter"]=="public"){
 		try{

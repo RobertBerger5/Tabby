@@ -8,18 +8,31 @@
 		$tab_id=1;//show default empty tab if not trying to view a specific one
 	}
 	//look for public tab with that ID first, then try to authenticate and look for owner or shared
-	$tab=querySafe("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public AND t.id=?",[$tab_id],PDO::FETCH_ASSOC)[0];
+	try{
+		$tab=querySafe("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public AND t.id=?",[$tab_id],PDO::FETCH_ASSOC)[0];
+	}catch(Exception $e){
+		echo "PDO ERROR: ".$e->getMessage()."<br>";
+	}
 
 	//not public, query for shared if signed in
 	if(empty($tab) && !empty($_SESSION)){
 		//TODO: query for shared
-		$tab=querySafe("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM users u LEFT JOIN shares s ON s.user=u.id LEFT JOIN tabs t ON s.tab=t.id WHERE u.username=? AND s.tab=?",[$_SESSION["username"],$tab_id],PDO::FETCH_ASSOC)[0];
+		try{
+			$tab=querySafe("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM users u LEFT JOIN shares s ON s.user=u.id LEFT JOIN tabs t ON s.tab=t.id WHERE u.username=? AND s.tab=?",[$_SESSION["username"],$tab_id],PDO::FETCH_ASSOC)[0];
+		}catch(Exception $e){
+			echo "PDO ERROR: ".$e->getMessage()."<br>";
+		}
 	}
 
 	//still not there, either they don't have permission, or it's not a valid tab id. Either way, just get the default tab
 	if(empty($tab)){
 		$error="Error retreiving tab: Either you don't have permission or it doesn't exist. Displaying default tab";
-		$tab=queryNormal("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public AND t.id=1",PDO::FETCH_ASSOC)[0];
+		try{
+			$tab=queryNormal("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public AND t.id=1",PDO::FETCH_ASSOC)[0];
+			$tab_id=1;
+		}catch(Exception $e){
+			echo "PDO ERROR: ".$e->getMessage()."<br>";
+		}
 	}
 	$data=json_encode($tab["data"]);
 ?>
