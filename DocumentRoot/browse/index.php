@@ -4,52 +4,46 @@
 
 	//TODO: just have a search query in GET info, so they can search by tags and such? Cuz this is gonna get reeeal messy if enough people actually start using it
 	$loaded_tabs=NULL;
-	if(empty($_GET) || $_GET["filter"]=="public"){
-		try{
-			$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
-			$loaded_tabs=$res;
-		}catch(Exception $e){
-			echo "PDO ERROR: ".$e->getMessage()."<br>";
-		}
-	}else if($_GET["filter"]=="mytabs"){
-		//echo "TODO: search by current user";
-		//echo $_SESSION["username"];
+	$error=NULL;
+	if($_GET["filter"]=="mytabs"){
 		try{
 			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN users u ON u.id=t.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
 		}catch(Exception $e){
-			echo "PDO ERROR: ".$e->getMessage()."<br>";
+			$error="PDO ERROR: ".$e->getMessage();
 		}
 	}else if($_GET["filter"]=="shared"){
 		//TODO: this includes their own tabs, that should be automatically shared with themselves
 		try{
 			//TODO: also u.username reflects the username of the person it's shared with, not the username of the owner...
-			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN shares s ON t.id=s.tab JOIN users u ON u.id=s.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
+			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN shares s ON t.id=s.tab JOIN users u ON u.id=s.user WHERE u.username=? AND ',[$_SESSION["username"]],PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
 		}catch(Exception $e){
-			echo "PDO ERROR: ".$e->getMessage()."<br>";
+			$error="PDO ERROR: ".$e->getMessage();
 		}
 	}else{
-		//unknown filter, just give em the default
+		//filter is empty, unknown, or public: give em public tabs
 		try{
 			$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
 		}catch(Exception $e){
-			echo "PDO ERROR: ".$e->getMessage()."<br>";
+			$error="PDO ERROR: ".$e->getMessage();
 		}
 	}
 
 	//print_r($loaded_tabs);
-	for($i=0;$i<count($loaded_tabs);$i++){
-		try{
-			$tags=querySafe('SELECT tag FROM tags WHERE tab=?',[$loaded_tabs[$i]['id']],PDO::FETCH_NUM);
-		//TODO: clean this up? right now tags is like [["one"],["two"]]
-			$loaded_tabs[$i]['tags']=$tags;
+	if(!empty($loaded_tabs)){
+		for($i=0;$i<count($loaded_tabs);$i++){
+			try{
+				$tags=querySafe('SELECT tag FROM tags WHERE tab=?',[$loaded_tabs[$i]['id']],PDO::FETCH_NUM);
+			//TODO: clean this up? right now tags is like [["one"],["two"]]
+				$loaded_tabs[$i]['tags']=$tags;
 
-			$likes=querySafe('SELECT COUNT(*) FROM likes WHERE tab=?',[$loaded_tabs[$i]['id']],PDO::FETCH_NUM);
-			$loaded_tabs[$i]['likes']=$likes[0][0];
-		}catch(Exception $e){
-			echo "PDO ERROR: ".$e->getMessage()."<br>";
+				$likes=querySafe('SELECT COUNT(*) FROM likes WHERE tab=?',[$loaded_tabs[$i]['id']],PDO::FETCH_NUM);
+				$loaded_tabs[$i]['likes']=$likes[0][0];
+			}catch(Exception $e){
+				$error="PDO ERROR: ".$e->getMessage();
+			}
 		}
 	}
 ?>
@@ -94,6 +88,9 @@
 		$doc->loadHTMLFile("../header.html");
 		echo $doc->saveHTML();*/
 		loadHeader();
+		if(!empty($error)){
+			echo "<script>alert(\"".$error."\")</script>";
+		}
 	?>
 
 	<!--https://bootstrapious.com/p/bootstrap-sidebar-->
