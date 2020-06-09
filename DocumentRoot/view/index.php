@@ -113,14 +113,6 @@
 			</div>
 		</div>
 		<div class="dropdown">
-			<button class="dropdown-toggle" data-toggle="dropdown">Share</button>
-			<div class="dropdown-menu">
-				<p onclick="alert('TODO: this')" class="dropdown-item">Shared with...</p>
-				<p onclick="alert('TODO: this')" class="dropdown-item">Share Tab</p>
-				<p onclick="alert('TODO: this')" class="dropdown-item">Make Public (?)</p>
-			</div>
-		</div>
-		<div class="dropdown">
 			<button class="dropdown-toggle" data-toggle="dropdown">View</button>
 			<div class="dropdown-menu">
 				<p onclick="alert('TODO: this')" class="dropdown-item">Hide UI</p>
@@ -135,6 +127,12 @@
 				<p onclick="alert('TODO: this')" class="dropdown-item">Louder</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Quieter</p>
 			</div>
+		</div>
+		<div>
+			<button>
+				<!--TODO: confirm loss of unsaved work-->
+				<a href="/info?tab=<?php echo $tab_id?>">Info Page</a>
+			</button>
 		</div>
 		<div id="ajaxStatus">
 			<div id="ajaxStatus-loader"></div>
