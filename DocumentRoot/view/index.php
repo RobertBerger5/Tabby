@@ -86,7 +86,7 @@
 		*/
 		loadHeader();
 		if(!empty($error)){
-			echo "<script>alert(\"".$error."\")</script>";
+			echo "<script>$(document).ready(()=>{alert(\"".$error."\");});</script>";
 		}
 	?>
 	<div id="menu" class="d-flex flex-row justify-content-start align-items-stretch">

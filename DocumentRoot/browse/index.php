@@ -4,8 +4,10 @@
 
 	//TODO: just have a search query in GET info, so they can search by tags and such? Cuz this is gonna get reeeal messy if enough people actually start using it
 	$loaded_tabs=NULL;
+	$filter=NULL;
 	$error=NULL;
 	if($_GET["filter"]=="mytabs"){
+		$filter="My Tabs";
 		try{
 			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN users u ON u.id=t.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
@@ -13,6 +15,7 @@
 			$error="PDO ERROR: ".$e->getMessage();
 		}
 	}else if($_GET["filter"]=="shared"){
+		$filter="Shared with Me";
 		//TODO: this includes their own tabs, that should be automatically shared with themselves
 		try{
 			//TODO: also u.username reflects the username of the person it's shared with, not the username of the owner...
@@ -22,6 +25,7 @@
 			$error="PDO ERROR: ".$e->getMessage();
 		}
 	}else{
+		$filter="Public Tabs";
 		//filter is empty, unknown, or public: give em public tabs
 		try{
 			$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
@@ -89,7 +93,7 @@
 		echo $doc->saveHTML();*/
 		loadHeader();
 		if(!empty($error)){
-			echo "<script>alert(\"".$error."\")</script>";
+			echo "<script>$(document).ready(()=>{alert(\"".$error."\");});</script>";
 		}
 	?>
 
@@ -98,16 +102,16 @@
 		<nav id="sidebar" class="active">
 			<div id="sidebarContent">
 				<h3>Search in:</h3>
-				<ul class="list-unstyled components">
-					<li><a href="index.php?filter=mytabs">mine</a></li>
-					<li><a href="index.php?filter=shared">shared</a></li>
-					<li><a href="index.php?filter=public">public</a></li>
-				</ul>
+				<div class="list-group list-group-flush">
+					<a href="index.php?filter=mytabs" class="list-group-item list-group-item-action">My Tabs</a>
+					<a href="index.php?filter=shared" class="list-group-item list-group-item-action">Shared with Me</a>
+					<a href="index.php?filter=public" class="list-group-item list-group-item-action">Public Tabs</a>
+				</div>
 			</div>
 			<div id="sidebarCollapse" />
 		</nav>
 		<div id="nonSidebarContent" class="overflow-auto">
-			<h3>Sort by <select class="form-select" id="sortBy" onchange="sortTabs()">
+			<h3><strong><?php echo $filter ?></strong> - Sort by <select class="form-select" id="sortBy" onchange="sortTabs()">
 					<option value="title" selected>Title</option>
 					<option value="owner">Owner</option>
 					<option value="likes">Likes</option>

@@ -44,7 +44,7 @@ body{
 	z-index:10000;/*why does bootstrap have such large z-indexes*/
 	transition: margin-left .25s;
 	display:flex;
-	background-color:#aaf;
+	background-color:#fff;
 }
 #sidebarCollapse{
 	width:25px;
