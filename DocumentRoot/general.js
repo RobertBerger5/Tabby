@@ -5,6 +5,7 @@ $(document).ready(()=>{
 });
 
 //execute other PHP file via AJAX, takes callbacks for what to do on failure and on success (with response text)
+//see php files in the ajaxFiles directory for examples on usage
 function ajaxCall(url,params,onSuccess=null,onFail=null){
 	ajaxStatusShow();
 	let xhttp=new XMLHttpRequest();
@@ -28,11 +29,18 @@ function ajaxCall(url,params,onSuccess=null,onFail=null){
 	xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xhttp.send(params);
 }
-
+/*these two need something like this in them:
+	<div id="ajaxStatus">
+		<div id="ajaxStatus-loader"></div>
+		<div id="ajaxStatus-text">Status</div>
+	</div>
+*/
+//call when user presses button
 function ajaxStatusShow(message="Updating"){
 	document.getElementById('ajaxStatus-text').innerHTML=message;
 	document.getElementById('ajaxStatus').style.opacity="75%";//display="block";
 }
+//call when server responds with update
 function ajaxStatusUpdate(success,message="Success"){
 	document.getElementById("ajaxStatus-text").innerHTML=message;
 	let loader=document.getElementById("ajaxStatus-loader");
