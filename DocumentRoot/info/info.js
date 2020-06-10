@@ -46,6 +46,8 @@ function displayShares(){
 		}
 		if(!isOwner){
 			editCheck.setAttribute("disabled","");
+		}else{
+			editCheck.setAttribute("onclick","toggleEdit("+shares[i].username+")");
 		}
 		editTD.appendChild(editCheck);
 		tr.appendChild(editTD);
@@ -54,12 +56,15 @@ function displayShares(){
 			let removeTD=document.createElement("td");
 			let removeButton=document.createElement("button");
 			removeButton.innerHTML="Remove";
+			//just to make sure it's removing the username they clicked on, probably not necessary to pass shares[i].username but oh well
+			removeButton.setAttribute("onclick","remove("+i+","+shares[i].username+")");
 			removeTD.appendChild(removeButton);
 			tr.appendChild(removeTD);
 
 			let makeOwnerTD=document.createElement("td");
 			let makeOwnerButton=document.createElement("button");
 			makeOwnerButton.innerHTML="Make Owner";
+			makeOwnerButton.setAttribute("onclick","makeOwner("+shares[i].username+")");
 			makeOwnerTD.appendChild(makeOwnerButton);
 			tr.appendChild(makeOwnerTD);
 		}
@@ -70,4 +75,14 @@ function displayShares(){
 	if(isOwner){
 		document.getElementById("ownerButtons").style.visibility="visible";
 	}
+}
+
+function toggleEdit(username){
+	console.log(username);
+}
+function removeUser(index,username){
+	console.log(username);
+}
+function makeOwner(username){
+	console.log(username);
 }

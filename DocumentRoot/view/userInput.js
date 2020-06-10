@@ -7,21 +7,7 @@ function selectNote(id) {
 }
 
 function saveTab(){
-	ajaxStatusShow();
-	let xhttp=new XMLHttpRequest();
-	xhttp.onreadystatechange=function(){
-		if(this.readyState==4 && this.status==200){
-			if(this.responseText[0]=="E"){//some kinda error
-				ajaxStatusUpdate(false,this.responseText.slice(2));
-			}else{
-				//alert(this.responseText);
-				ajaxStatusUpdate(true);
-			}
-		}
-	};
-	xhttp.open("POST","ajaxFiles/saveTab.php",true);
-	xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	xhttp.send("id="+tab_id+"&data="+JSON.stringify(tab));
+	ajaxCall("/ajaxFiles/saveTab.php","id="+tab_id+"&data="+JSON.stringify(tab));
 }
 
 //called by the dropdown "trackSelector" <select> element

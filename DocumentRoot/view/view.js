@@ -51,25 +51,3 @@ function handleKey(event) {
 		drawer.drawSelector(editor.selected);
 	}
 };
-
-function ajaxStatusShow(message="Updating"){
-	document.getElementById('ajaxStatus-text').innerHTML=message;
-	document.getElementById('ajaxStatus').style.opacity="75%";//display="block";
-}
-function ajaxStatusUpdate(success,message="Success"){
-	document.getElementById("ajaxStatus-text").innerHTML=message;
-	let loader=document.getElementById("ajaxStatus-loader");
-	loader.style.borderWidth="2vh";
-	if(success){
-		loader.style.borderColor="#0f0";
-	}else{
-		loader.style.borderColor="#f00";
-	}
-	//show updated status for 3 seconds, then hide again
-	setTimeout(()=>{
-		document.getElementById('ajaxStatus').style.opacity="0%";//display="none";
-		loader.style.borderWidth="1vh";
-		loader.style.borderColor="#eee";
-		loader.style.borderTopColor="#3ae";
-	},3000);
-}

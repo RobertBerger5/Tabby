@@ -74,10 +74,6 @@
 
 <body>
 	<?php
-		/*$doc=new DOMDocument();
-		$doc->loadHTMLFile("../header.html");
-		echo $doc->saveHTML();
-		*/
 		loadHeader();
 		if(!empty($error)){
 			echo "<script>$(document).ready(()=>{alert(\"".$error."\");});</script>";
@@ -104,6 +100,11 @@
 		<button>
 			<a href="/view?tab=<?php echo $tab_id?>">View Tab</a>
 		</button>
+
+		<div id="ajaxStatus">
+			<div id="ajaxStatus-loader"></div>
+			<div id="ajaxStatus-text">Status</div>
+		</div>
 		
 		<table class="table table-striped">
 			<thead>

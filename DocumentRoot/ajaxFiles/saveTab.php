@@ -1,4 +1,5 @@
 <?php
+//will die if user doesn't have permission to view, or any other issue
 require 'ajaxCheck.php';
 
 if(!$can_edit){
@@ -10,9 +11,11 @@ if(!$can_edit){
 
 try{
 	$res=querySafe("UPDATE tabs SET tab_data=? WHERE tabs.id=?",[$_POST["data"],$id]);
+	die($res);
 }catch(Exception $e){
 	echo "PDO ERROR: ".$e->getMessage()."<br>";
-	die("E: PDO Error");
+	http_response_code(500);
+	die("PDO Error");
 }
-die();
+die("Updated");
 ?>

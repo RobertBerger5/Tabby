@@ -63,3 +63,33 @@ body{
 	margin-left:25px;
 	height:100%
 }
+
+#ajaxStatus{
+	opacity:0%;
+	padding:.5vh;
+	padding-left:10px;
+	width:30%;
+	transition: opacity .25s;
+}
+#ajaxStatus-loader{
+	float:left;
+	border-width:1vh;
+	border-style: solid;
+	border-color:#eee; /*light grey*/
+	border-top-color: #3ae; /* Blue */
+	border-radius: 50%;
+	width: 4vh;
+	height: 4vh;
+	animation: spin 2s linear infinite;
+	transition: border-width .5s,border-color .5s;
+}
+@keyframes spin{
+	0%{transform:rotate(0deg);}
+	100%{transform:rotate(360deg);}
+}
+#ajaxStatus-text{
+	width:50%;
+	margin:0px;
+	float:left;
+	margin-left:5px;
+}

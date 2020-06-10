@@ -96,8 +96,6 @@
 				<p onclick="saveTab()" class="dropdown-item">Save</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Rename</p>
 				<p onclick="alert('TODO: this')" class="dropdown-item">Fork</p>
-				<p onclick="alert('TODO: this')" class="dropdown-item">Delete (?)</p>
-				<p onclick="alert('TODO: whole nother page');showJSON()" class="dropdown-item">Info</p>
 			</div>
 		</div>
 		<div class="dropdown">
