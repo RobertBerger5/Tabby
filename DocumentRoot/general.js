@@ -11,7 +11,7 @@ function ajaxCall(url,params,onSuccess=null,onFail=null){
 	let xhttp=new XMLHttpRequest();
 	xhttp.onreadystatechange=function(){
 		if(this.readyState==XMLHttpRequest.DONE){
-			console.log(this)
+			console.log(this.status)
 			if(this.status!=200){//some kinda error
 				ajaxStatusUpdate(false,this.responseText);
 				if(onFail){

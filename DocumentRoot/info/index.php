@@ -20,7 +20,7 @@
 
 	$shares=NULL;
 	try{
-		$res=querySafe('SELECT u.username,s.can_edit FROM shares s LEFT JOIN users u ON s.user=u.id WHERE u.username=? AND s.tab=?',[$_SESSION["username"],$tab_id],PDO::FETCH_ASSOC);
+		$res=querySafe('SELECT u.username,s.can_edit FROM shares s JOIN users u ON s.user=u.id AND s.tab=?',[$tab_id],PDO::FETCH_ASSOC);
 		$shares=json_encode($res);
 	}catch(Exception $e){
 		$error="PDO Error: ".$e->getMessage();
@@ -80,11 +80,12 @@
 		}
 	?>
 	<script>
+	var tab_id = <?php echo $tab_id ?>;
 	var owner = "<?php echo $owner?>";
-	var isOwner = <?php echo $is_owner ?> ;
-	var isPublic = <?php echo $is_public ?> ;
+	var isOwner = <?php echo $is_owner ?>;
+	var isPublic = <?php echo $is_public ?>;
 	var shares = JSON.parse( <?php echo json_encode($shares); ?> );
-	shares = [{
+	/*shares = [{
 		can_edit: '1',
 		username: 'rob'
 	}, {
@@ -93,7 +94,7 @@
 	}, {
 		can_edit: '1',
 		username: 'bill'
-	}]
+	}]*/
 	</script>
 
 	<div id="infoContent">

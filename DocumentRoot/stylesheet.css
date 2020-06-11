@@ -68,7 +68,7 @@ body{
 	opacity:0%;
 	padding:.5vh;
 	padding-left:10px;
-	width:30%;
+	width:50%;
 	transition: opacity .25s;
 }
 #ajaxStatus-loader{
