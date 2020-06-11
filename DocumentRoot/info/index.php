@@ -27,14 +27,14 @@
 	}
 
 	$owner=NULL;
-	$is_public=NULL;
-	$is_owner=FALSE;
+	$is_public=0;
+	$is_owner=0;
 	try{
 		$properties=querySafe('SELECT u.username,t.is_public FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.id=?',[$tab_id],PDO::FETCH_ASSOC)[0];
 		$owner=$properties["username"];
 		$is_public=$properties["is_public"];
 		if($_SESSION["username"]==$owner){
-			$is_owner=TRUE;
+			$is_owner=1;
 		}
 	}catch(Exception $e){
 		$error="PDO Error: ".$e->getMessage();
@@ -80,21 +80,12 @@
 		}
 	?>
 	<script>
+	//get vars to js easily
 	var tab_id = <?php echo $tab_id ?>;
 	var owner = "<?php echo $owner?>";
 	var isOwner = <?php echo $is_owner ?>;
 	var isPublic = <?php echo $is_public ?>;
 	var shares = JSON.parse( <?php echo json_encode($shares); ?> );
-	/*shares = [{
-		can_edit: '1',
-		username: 'rob'
-	}, {
-		can_edit: '0',
-		username: 'abby'
-	}, {
-		can_edit: '1',
-		username: 'bill'
-	}]*/
 	</script>
 
 	<div id="infoContent">
@@ -123,9 +114,16 @@
 		<!--Note: if anyone's looking and knows anything about security, relax. Everything will be double-checked for validity server-size as well-->
 		<div id="ownerButtons" class="container" style="visibility:hidden;">
 			<div class="row">
-				<button class="col-sm">test</button>
-				<button class="col-sm">test</button>
-				<button class="col-sm">test</button>
+				<button onclick="shareWith()" class="col-sm">Share With...</button>
+				<button onclick="togglePublic()" id="button-public" class="col-sm">
+					<?php
+						if($is_public){
+							echo "Make Private";
+						}else{
+							echo "Make Public";
+						}
+					?>
+				</button>
 			</div>
 		</div>
 		<br><br>

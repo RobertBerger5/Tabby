@@ -1,7 +1,20 @@
 $(document).ready(() => {
 	$('#pageTitle').html("INFO");
+	initTable();
 	loadShares();
 });
+
+function initTable(){
+	if(isOwner){
+		let remove=document.createElement("th");
+		remove.innerHTML="Remove";
+		document.getElementById("shareTableHead").appendChild(remove);
+
+		let makeOwner=document.createElement("th");
+		makeOwner.innerHTML="Make Owner";
+		document.getElementById("shareTableHead").appendChild(makeOwner);
+	}
+}
 
 function loadShares(){
 	shares.sort((a, b) => {
@@ -15,16 +28,6 @@ function loadShares(){
 	displayShares();
 }
 function displayShares(){
-	if(isOwner){
-		let remove=document.createElement("th");
-		remove.innerHTML="Remove";
-		document.getElementById("shareTableHead").appendChild(remove);
-
-		let makeOwner=document.createElement("th");
-		makeOwner.innerHTML="Make Owner";
-		document.getElementById("shareTableHead").appendChild(makeOwner);
-	}
-
 	for(let i=0;i<shares.length;i++){
 		//don't bother showing who has view access to public tabs, everyone has view access
 		//commented out because if someone had edit access and then didn't, it could cause problems with the owner reallowing them edit access
@@ -57,7 +60,7 @@ function displayShares(){
 			let removeButton=document.createElement("button");
 			removeButton.innerHTML="Remove";
 			//just to make sure it's removing the username they clicked on, probably not necessary to pass shares[i].username but oh well
-			removeButton.setAttribute("onclick","remove("+i+",'"+shares[i].username+"')");
+			removeButton.setAttribute("onclick","removeUser("+i+",'"+shares[i].username+"')");
 			removeTD.appendChild(removeButton);
 			tr.appendChild(removeTD);
 
@@ -82,15 +85,30 @@ function toggleEdit(username,checked){
 	if(checked){
 		allow=1;
 	}
-	ajaxCall("/ajaxFiles/changeEditPriv.php","id="+tab_id+"&user="+username+"&edit="+allow,onSuccess=()=>{
-		
-	},onFail=()=>{
-
-	});
+	ajaxCall("/ajaxFiles/changeEditPriv.php","id="+tab_id+"&user="+username+"&edit="+allow);
 }
 function removeUser(index,username){
-	console.log(username);
+	if(confirm("Are you sure you want to remove "+username+"?")){
+		ajaxCall("/ajaxFiles/removeUser.php","id="+tab_id+"&user="+username);
+	}
 }
 function makeOwner(username){
-	console.log(username);
+	if(confirm("Are you sure you want to transfer ownership to "+username+"?")){
+		ajaxCall("/ajaxFiles/makeOwner.php","id="+tab_id+"&user="+username);
+	}
+}
+
+function shareWith(){
+	let user=prompt("Username: ");
+	if(user!=null){
+		ajaxCall("/ajaxFiles/shareWith.php","id="+tab_id+"&user="+user);
+	}
+}
+function togglePublic(){
+	if(confirm("Are you sure you want to make this tab "+(isPublic?"private":"public")+"?")){
+		ajaxCall("/ajaxFiles/makePublic.php","id="+tab_id+"&public="+(1-isPublic),onSuccess=()=>{
+			isPublic=1-isPublic; //toggle between 0 and 1
+			document.getElementById("button-public").innerHTML="Make "+(isPublic?"Private":"Public");
+		});
+	}
 }

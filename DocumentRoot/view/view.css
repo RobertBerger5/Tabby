@@ -4,6 +4,11 @@
 	background-color:#ddd;
 	border:1px solid black;
 }
+
+/*info page button*/
+#menu div button{
+	height:100%;
+}
 .dropdown-toggle{
 	height:100%;
 }
