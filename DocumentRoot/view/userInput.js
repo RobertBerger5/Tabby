@@ -9,6 +9,22 @@ function selectNote(id) {
 function saveTab(){
 	ajaxCall("/ajaxFiles/saveTab.php","id="+tab_id+"&data="+JSON.stringify(tab));
 }
+function renameTab(){
+	let newName=prompt("New Tab Name",tab_title);
+	if(name!=null){
+		ajaxCall("/ajaxFiles/renameTab.php","id="+tab_id+"&name="+newName,onSuccess=()=>{
+			tab_title=newName;
+		});
+	}
+}
+function forkTab(){
+	if(confirm("Fork tab? (This creates a copy of this tab that you own)")){
+		ajaxCall("/ajaxFiles/forkTab.php","id="+tab_id,onSuccess=(newID)=>{
+			//open in new window
+			window.open("/view/index.php?tab="+newID);
+		});
+	}
+}
 
 //called by the dropdown "trackSelector" <select> element
 function changeTrack() {

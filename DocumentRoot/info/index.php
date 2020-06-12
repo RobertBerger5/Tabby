@@ -124,6 +124,7 @@
 						}
 					?>
 				</button>
+				<button onclick="deleteTab()" class="col-sm">Delete</button>
 			</div>
 		</div>
 		<br><br>

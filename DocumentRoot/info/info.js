@@ -112,3 +112,10 @@ function togglePublic(){
 		});
 	}
 }
+function deleteTab(){
+	if(confirm("Are you really sure you want to delete this tab?")){
+		ajaxCall("/ajaxFiles/deleteTab.php","id="+tab_id,onSuccess=()=>{
+			window.location.href="/browse";
+		});
+	}
+}

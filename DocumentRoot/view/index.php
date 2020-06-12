@@ -94,8 +94,8 @@
 			<button class="dropdown-toggle" data-toggle="dropdown">File</button>
 			<div class="dropdown-menu">
 				<p onclick="saveTab()" class="dropdown-item">Save</p>
-				<p onclick="alert('TODO: this')" class="dropdown-item">Rename</p>
-				<p onclick="alert('TODO: this')" class="dropdown-item">Fork</p>
+				<p onclick="renameTab()" class="dropdown-item">Rename</p>
+				<p onclick="forkTab()" class="dropdown-item">Fork</p>
 			</div>
 		</div>
 		<div class="dropdown">
@@ -209,6 +209,7 @@
 							//TODO: might add techniques here (like palm mutes or bends?)
 	*/
 	var tab_id=<?php echo $tab_id ?>;
+	var tab_title='<?php echo $tab["title"]; ?>';
 	var tab = JSON.parse( <?php echo $data ?> );
 
 	/*tab = JSON.parse("\
