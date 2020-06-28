@@ -15,7 +15,6 @@
 			if($fetchAs==NULL){
 				$ret="success";
 			}else{
-				//TODO: only grab first index? It seems to always return its thing as the only element in an array.
 				$ret=$stmt->fetchAll($fetchAs);
 			}
 			return $ret;

@@ -113,8 +113,9 @@ function togglePublic(){
 	}
 }
 function deleteTab(){
-	if(confirm("Are you really sure you want to delete this tab?")){
+	if(confirm("Are you really sure you want to delete this tab? (this can be recovered from the ID number, seen in the URL)")){
 		ajaxCall("/ajaxFiles/deleteTab.php","id="+tab_id,onSuccess=()=>{
+			alert("Tab successfully deleted");
 			window.location.href="/browse";
 		});
 	}

@@ -196,7 +196,6 @@ class Editor {
 		this.tab.measures[measureN].timeN = timeN;
 		this.clearTrackMeasure(this.tab.measures[measureN], this.track);
 	}
-	//TODO: these don't clear other tracks as well.
 	changeTimeD(measureN, timeD) {
 		this.tab.measures[measureN].timeD = timeD;
 		this.clearTrackMeasure(this.tab.measures[measureN], this.track);
@@ -206,7 +205,6 @@ class Editor {
 	}
 
 	changeRhythm(measureN, beatN, duration) {
-		//TODO: if I change a rhythm, sometimes it doesn't even realize that duration<beat.duration. how??
 		let measure = this.tab.measures[measureN].tracks[this.track];
 		let beat = measure[beatN];
 		//console.log("change measure "+measureN+", beat "+beatN+" from "+beat.duration+" to "+duration);

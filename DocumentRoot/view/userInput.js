@@ -89,7 +89,7 @@ function loadTrackStrings() {
 		note.setAttribute('id', ('trackStringNote' + i));
 		note.setAttribute('onchange', 'changeTrackString(' + i + ');this.blur();');
 
-		//TODO: add all notes in Player.notes
+		//Player.notes is all possible notes (C, C#, D, etc.)
 		for (let n of Player.notes) {
 			let option = document.createElement('option');
 			option.setAttribute('value', n);

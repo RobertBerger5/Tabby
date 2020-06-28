@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS shares (
 	FOREIGN KEY (user) REFERENCES users(id)
 ) ENGINE=INNODB;
 
-/*TODO: run my password through the same encryption as the final product will use, and insert that straight into here*/
 INSERT INTO users VALUES (1,'rob','$2y$10$RPgZekDq0DteGsmgDYPvL.cTVh2S/w77RX6jv7UeD8yUWnjGYvj1a');
 
 INSERT INTO tabs VALUES (1,'(blank)',1,1,TRUE,CURRENT_TIMESTAMP,'{\"info\":{\"title\":\"(title)\"},\"tracks\":[{\"name\":\"guitar\",\"voice\":\"guitar_distort\",\"strings\":[{\"note\":\"E\",\"octave\":4},{\"note\":\"B\",\"octave\":3},{\"note\":\"G\",\"octave\":3},{\"note\":\"D\",\"octave\":3},{\"note\":\"A\",\"octave\":2},{\"note\":\"E\",\"octave\":2}]},{\"name\":\"bass\",\"voice\":\"bass_picked\",\"strings\":[{\"note\":\"G\",\"octave\":2},{\"note\":\"D\",\"octave\":2},{\"note\":\"A\",\"octave\":1},{\"note\":\"E\",\"octave\":1}]}],\"measures\":[{\"timeN\":4,\"timeD\":4,\"tempo\":120,\"tracks\":[[{\"duration\":1,\"notes\":[]}],[{\"duration\":1,\"notes\":[]}]]}]}');

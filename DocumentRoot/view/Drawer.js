@@ -205,7 +205,7 @@ class Drawer {
 				return;
 			}
 		} else {
-			note.setAttribute("fill", fill); //TODO: fill not working properly
+			note.setAttribute("fill", fill);
 		}
 		//vertical line on everything but whole notes
 		let line = document.createElementNS("http://www.w3.org/2000/svg", "line");

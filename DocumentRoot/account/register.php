@@ -26,7 +26,6 @@
 			//also 8 or more characters
 			$error="Invalid password";
 		}else{
-			//TODO: add to DB, if no error then do this
 			$secure=password_hash($password,PASSWORD_DEFAULT);//encrypt it using PHP's built-in password encryptor, which should be bcrypt with randomly generated salts that are stored in the string itself
 			try{
 				$res=querySafe('INSERT INTO users (username,password) VALUES (?,?)',[$username,$secure]);

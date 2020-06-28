@@ -7,11 +7,11 @@ if(!$is_owner){
 	die("Only owner can delete");
 }
 
+
 try{
-	//it probably takes care of the shares automatically because of unique keys or something, but do this just in case I guess
 	$res=querySafe("DELETE FROM shares WHERE tab=?",[$tab_id]);
-	//TODO: actually, just make all the data be [deleted] instead, to keep track of where tabs came from
-	$res=querySafe("DELETE FROM tabs WHERE id=?",[$tab_id]);
+	//instead of deleting it, we keep the tab and its data, both to recover it and to trace fork lineages
+	$res=querySafe("UPDATE tabs SET title='[deleted]',user=1,is_public=0 WHERE id=?",[$tab_id]);
 }catch(Exception $e){
 	http_response_code(500);
 	die("PDO Error ".$e->getMessage());

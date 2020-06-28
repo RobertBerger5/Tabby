@@ -6,29 +6,29 @@
 	$loaded_tabs=NULL;
 	$filter=NULL;
 	$error=NULL;
-	if($_GET["filter"]=="mytabs"){
-		$filter="My Tabs";
+	if($_GET["filter"]=="public"){
+		$filter="Public Tabs";
 		try{
-			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN users u ON u.id=t.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
+			$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
 		}catch(Exception $e){
 			$error="PDO ERROR: ".$e->getMessage();
 		}
+		
 	}else if($_GET["filter"]=="shared"){
 		$filter="Shared with Me";
-		//TODO: this includes their own tabs, that should be automatically shared with themselves
+		//doesn't display their own tabs, just ones that others have shared with them
 		try{
-			//TODO: also u.username reflects the username of the person it's shared with, not the username of the owner...
-			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN shares s ON t.id=s.tab JOIN users u ON u.id=s.user WHERE u.username=? AND ',[$_SESSION["username"]],PDO::FETCH_ASSOC);
+			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN shares s ON t.id=s.tab JOIN users u ON u.id=s.user WHERE u.username=? AND NOT t.user=u.id',[$_SESSION["username"]],PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
 		}catch(Exception $e){
 			$error="PDO ERROR: ".$e->getMessage();
 		}
 	}else{
-		$filter="Public Tabs";
-		//filter is empty, unknown, or public: give em public tabs
+		//default to my tabs
+		$filter="My Tabs";
 		try{
-			$res=queryNormal('SELECT t.id,t.title, u.username FROM tabs t LEFT JOIN users u ON t.user=u.id WHERE t.is_public',PDO::FETCH_ASSOC);
+			$res=querySafe('SELECT t.id,t.title,u.username FROM tabs t JOIN users u ON u.id=t.user WHERE u.username=?',[$_SESSION["username"]],PDO::FETCH_ASSOC);
 			$loaded_tabs=$res;
 		}catch(Exception $e){
 			$error="PDO ERROR: ".$e->getMessage();

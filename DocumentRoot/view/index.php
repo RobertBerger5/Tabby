@@ -16,7 +16,6 @@
 
 	//not public, query for shared if signed in
 	if(empty($tab) && !empty($_SESSION)){
-		//TODO: query for shared
 		try{
 			$tab=querySafe("SELECT t.title,u.username,t.forked_from,t.last_edit,t.tab_data AS data FROM users u LEFT JOIN shares s ON s.user=u.id LEFT JOIN tabs t ON s.tab=t.id WHERE u.username=? AND s.tab=?",[$_SESSION["username"],$tab_id],PDO::FETCH_ASSOC)[0];
 		}catch(Exception $e){

@@ -118,8 +118,7 @@ function renderTabs() {
 		for (let j = 0; j < tab.tags.length; j++) {
 			tagsString += "#" + tab.tags[j] + ", ";
 		}
-		//TODO: link to /view/ pages
-		td.innerHTML = "<b>" + tab.title + "</a></b> - <i>" + tab.username + "</i> <span class='text-muted'>" + tagsString + "</span>";
+		td.innerHTML = "<b>" + tab.title + "</b> - <i>" + tab.username + "</i> <span class='text-muted'>" + tagsString + "</span>";
 		tr.appendChild(td);
 
 		td = document.createElement("td");
